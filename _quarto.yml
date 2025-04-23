@@ -2,10 +2,10 @@ project:
   type: website
 
 website:
-  title: "<img src='Shiba.png' alt='Shiba Icon' style='height: 32px; width: 32px;'>"
+  title: "<img src='images/Shiba.png' alt='Shiba Icon' style='height: 32px; width: 32px;'>"
   navbar:
     left:
-    - text: "Hands-on Exercise"
+    - text: "Hands-on Exercises"
       menu: 
         - text: "Hands-on Exercise 1"
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
@@ -18,7 +18,7 @@ website:
   sidebar: 
     style: "docked"
     contents:
-        - section: "Hands-on Exercise"
+        - section: "Hands-on Exercises"
         - text: "Hands-on Exercise 1"
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
         - text: "Hands-on Exercise 2"
