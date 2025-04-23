@@ -1,5 +1,6 @@
 ---
 title: "About"
+sidebar: false
 ---
 
 Hello! I'm Yi Fang, a postgraduate student with a passion for uncovering insights through analytics.

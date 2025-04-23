@@ -1,1 +1,10 @@
 /* css styles */
+/* Set overall page background */
+body {
+  background-color: #F6F5EB;
+}
+
+/* Set navbar background */
+.navbar {
+  background-color: #003A16;
+}
