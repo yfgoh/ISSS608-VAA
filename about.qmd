@@ -2,8 +2,6 @@
 title: "About"
 ---
 
-About this site
+Hello! I'm Yi Fang, a postgraduate student with a passion for uncovering insights through analytics.
 
-```{r}
-1 + 1
-```
+This site is my space to explore and refine my skills in visual analytics, while sharing my learning journey along the way. I'm also currently learning RStudio to broaden my analytical toolkit and deepen my understanding of data storytelling. I'm excited to grow, experiment, and hopefully connect with others who are just as excited about the power of analytics!
