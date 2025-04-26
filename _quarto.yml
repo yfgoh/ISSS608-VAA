@@ -11,12 +11,15 @@ website:
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
         - text: "Hands-on Exercise 2"
           href: "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html"
+    - text: "In-class Exercises"
+    - text: "Take-home Exercises"
     right:
       - href: index.qmd
         text: Home
       - about.qmd
   sidebar: 
     style: "docked"
+    background: "#F6F5EB"
     contents:
         - section: "Hands-on Exercises"
         - text: "Hands-on Exercise 1"

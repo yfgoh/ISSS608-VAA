@@ -3,6 +3,10 @@ title: "Hands-on Exercise 1"
 author: "Goh Yi Fang"
 date: "April 18, 2025"
 date-modified: "last-modified"
+format: html
+editor: visual
+freeze: true
+warning: false
 ---
 
 # Getting Started

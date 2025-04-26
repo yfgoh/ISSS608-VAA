@@ -5,5 +5,3 @@ title: "ISSS608 — Visual Analytics and Applications"
 Welcome to **ISSS608 Visual Analytics and Applications**. In this website, you will find my learnings and coursework prepared for this course.
 
 Please note that it's currently a work-in-progress — thank you for your understanding and patience as I continue to update and improve it!
-
-![](images/Adobe Express - file.png)
