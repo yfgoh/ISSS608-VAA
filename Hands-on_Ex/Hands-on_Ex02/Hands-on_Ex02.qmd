@@ -220,7 +220,7 @@ ggplot(data=exam_data,
                  color="grey25", 
                  fill="grey90") +
   ggtitle("Distribution of Maths scores") +
-  theme_wsj()
+  theme_economist()
 ```
 :::
 
@@ -529,6 +529,8 @@ Figure below is created by combining patchwork and `theme_economist()` of ggthem
 
 ```{r}
 #| echo: false
+#| fig-width: 13
+#| fig-height: 7
 patchwork <- (p1 / p2) | p3
 patchwork & theme_economist()
 ```
