@@ -2,7 +2,8 @@ project:
   type: website
 
 website:
-  title: "<img src='images/Shiba.png' alt='Shiba Icon' style='height: 32px; width: 32px;'>"
+  title: "<img src='/images/shibainu.png' alt='ISSS608' style='height: 48px; width: 48px;'>"
+  back-to-top-navigation: true
   navbar:
     left:
     - text: "Hands-on Exercises"
@@ -11,6 +12,10 @@ website:
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
         - text: "Hands-on Exercise 2"
           href: "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html"
+        - text: "Hands-on Exercise 3a"
+          href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html"
+        - text: "Hands-on Exercise 3b"
+          href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html"
     - text: "In-class Exercises"
     - text: "Take-home Exercises"
     right:
@@ -26,7 +31,10 @@ website:
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
         - text: "Hands-on Exercise 2"
           href: "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html"
-
+        - text: "Hands-on Exercise 3a"
+          href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html"
+        - text: "Hands-on Exercise 3b"
+          href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html"
 format:
   html:
     theme: flatly

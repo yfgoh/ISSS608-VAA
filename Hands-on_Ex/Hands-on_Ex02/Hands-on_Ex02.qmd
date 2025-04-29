@@ -1,9 +1,12 @@
 ---
 title: "Hands-on Exercise 2"
-author: "Goh Yi Fang"
+author: "Yi Fang"
 date: "April 22, 2025"
 date-modified: "last-modified"
 format: html
+editor: visual
+freeze: true
+warning: false
 ---
 
 # Beyond ggplot2 Fundamentals
@@ -109,7 +112,7 @@ ggplot(data=exam_data,
 ```
 :::
 
-[**ggrepel**](https://ggrepel.slowkow.com/) is an extension of **ggplot2** package which provides `geoms` for **ggplot2** to repel overlapping text as in our examples on the right.  
+[**ggrepel**](https://ggrepel.slowkow.com/) is an extension of **ggplot2** package which provides `geoms` for **ggplot2** to repel overlapping text as in the examples on below.  
 
 We simply replace `geom_text()` by [`geom_text_repel()`](https://ggrepel.slowkow.com/reference/geom_text_repel.html) and `geom_label()` by [`geom_label_repel`](https://ggrepel.slowkow.com/reference/geom_text_repel.html).
 

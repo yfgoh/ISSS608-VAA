@@ -1,6 +1,6 @@
 ---
 title: "Hands-on Exercise 1"
-author: "Goh Yi Fang"
+author: "Yi Fang"
 date: "April 18, 2025"
 date-modified: "last-modified"
 format: html
