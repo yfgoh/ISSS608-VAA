@@ -2,6 +2,6 @@
 title: "ISSS608 — Visual Analytics and Applications"
 ---
 
-Welcome to **ISSS608 Visual Analytics and Applications**. In this website, you will find my learnings and coursework prepared for this course.
+![](images/IMG_0616.PNG){fig-align="center" width="470"}
 
-Please note that it's currently a work-in-progress — thank you for your understanding and patience as I continue to update and improve it!
+Welcome to my website, created for **ISSS608: Visual Analytics and Applications**. Here, you'll find a collection of my learnings and coursework from the course, reflecting the skills and knowledge I've developed throughout this journey.
