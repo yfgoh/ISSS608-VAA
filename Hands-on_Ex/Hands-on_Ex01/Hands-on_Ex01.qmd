@@ -558,7 +558,7 @@ ggplot(data=exam_data,
   theme_minimal()
 ```
 
-1.12 Reference
+## 1.12 Reference
 
 -   Hadley Wickham (2023) [**ggplot2: Elegant Graphics for Data Analysis**](https://ggplot2-book.org/). Online 3rd edition.
 

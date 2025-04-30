@@ -1,0 +1,22 @@
+---
+title: "Take-home_Ex01"
+author: "Yi Fang"
+date: "April 30, 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+freeze: true
+warning: false
+---
+
+# 1 Overview
+
+## 1.1 Background
+
+Singapore's resident population, consisting of citizens and permanent residents, is distributed across 55 planning areas and 332 subzones. Given the limited land space, urban planning and developments are committed to efficient land use and community integration.
+
+## 1.2 Objectives
+
+This exercise will assume the role of a graphical editor of a media company planning to release an article on demographic structures and distribution of Singapore in 2024.
+
+The data will be processed by using appropriate **tidyverse** family of packages and the data visualisation will be prepared using **ggplot2** and its extensions.

@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Exercise 3.2"
+title: "Hands-on Exercise 3b"
 author: "Yi Fang"
 date: "April 29, 2025"
 date-modified: "last-modified"
@@ -348,7 +348,7 @@ bp
 ```
 :::
 
-## **4.5 Reference**
+## 4.5 Reference
 
 -   [Getting Started](https://gganimate.com/articles/gganimate.html)
 
