@@ -1,5 +1,5 @@
 ---
-title: "Take-home_Ex01"
+title: "Take-home Exercise 1"
 author: "Yi Fang"
 date: "April 30, 2025"
 date-modified: "last-modified"
@@ -9,14 +9,219 @@ freeze: true
 warning: false
 ---
 
-# 1 Overview
+## 1 Overview
 
-## 1.1 Background
+### 1.1 Background
 
-Singapore's resident population, consisting of citizens and permanent residents, is distributed across 55 planning areas and 332 subzones. Given the limited land space, urban planning and developments are committed to efficient land use and community integration.
+With reference to [Singstat](https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data), Singapore’s resident population, consisting of citizens and permanent residents, stands at 4.18 million in 2024, with close to 20% of residents aged 65 and above. The population is distributed across 55 planning areas and 332 subzones. Due to the nation’s limited land space, the majority of its highly urbanized residents live in densely populated areas, a trend that will play a crucial role in shaping the country’s future policies and growth.
 
-## 1.2 Objectives
+### 1.2 Objectives
 
 This exercise will assume the role of a graphical editor of a media company planning to release an article on demographic structures and distribution of Singapore in 2024.
 
 The data will be processed by using appropriate **tidyverse** family of packages and the data visualisation will be prepared using **ggplot2** and its extensions.
+
+## 2 Getting started
+
+### 2.1 Load packages
+
+The following R packages will be loaded using the `pacman::p_load()` function.
+
+-   ggrepel: an R package provides geoms for ggplot2 to repel overlapping text labels.
+
+-   ggthemes: an R package provides some extra themes, geoms, and scales for ‘ggplot2’.
+
+-   hrbrthemes: an R package provides typography-centric themes and theme components for ggplot2.
+
+-   patchwork: an R package for preparing composite figure created using ggplot2.
+
+```{r}
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse, ggplot2, dplyr, scales) 
+```
+
+### 2.2 Import data
+
+This exercise will be using *Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024* dataset shared by [Department of Statistics, Singapore (DOS)](https://www.singstat.gov.sg/) Proceed to load the dataset with the following code.
+
+```{r}
+respop_data <- read_csv("data/respopagesex2024.csv")
+```
+
+## 3 Data Wrangling
+
+Using `glimpse()` function, we get an overview of the dataset.
+
+```{r}
+glimpse(respop_data)
+```
+
+We see that the dataset has 60,424 rows with 6 columns. It also shows the data type for each column.
+
+### 3.1 Check for duplicates
+
+Using the duplicated function, we check for duplicates in the dataset.
+
+```{r}
+respop_data[duplicated(respop_data),]
+```
+
+As indicated in the results, there are no duplicates.
+
+### 3.2 Check for missing values
+
+Using the code below, we will check for missing values.
+
+```{r}
+for(column_name in names(respop_data)) {
+  na_count <- sum(is.na(respop_data[[column_name]]))
+
+  if (na_count > 0) {
+    message("Column '", column_name, "' has ", na_count, " NA values.")
+  }
+}
+```
+
+### 3.3 Filtering data
+
+For Age column, it is categorical as 90 and above are grouped into one category. For this exercise, '90 and above' was excluded to ensure that Age could be treated as a numeric variable. This allows for proper analysis and visualisation. The following code will exclude 90 and above and cast Age as numeric.
+
+```{r}
+respop_data_clean <- respop_data %>%
+  filter(Age != "90_and_Over") %>%
+  mutate(Age = as.numeric(Age))
+
+```
+
+## 4 Data visualisation
+
+### 4.1 Age-Sex Pyramid on a National Level
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+national_data <- respop_data_clean %>%
+  group_by(Age, Sex) %>%
+  summarise(Total = sum(Pop, na.rm = TRUE), .groups = 'drop') %>%
+  mutate(
+    Age = as.integer(Age),
+    Total = ifelse(Sex == "Males", -Total, Total)  # Make male population negative for pyramid
+  )
+
+# Plot the age-sex pyramid with vertical lines at Age 65 and 18
+ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Flip the plot to create a pyramid shape
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1), breaks = scales::pretty_breaks()) +  # Format y-axis
+  labs(
+    title = "Singapore Population Pyramid (2024)",
+    x = "Age",
+    y = "Population",
+    fill = "Sex"
+  ) +
+  theme_minimal() +  # Clean minimal theme
+  
+  # Add vertical lines at Age 65 and Age 18
+  geom_vline(xintercept = 65, linetype = "dashed", color = "black", size = 1) +
+  geom_vline(xintercept = 42.8, linetype = "dashed", color = "black", size = 1) +
+  
+  # Optionally, add text annotations for the lines
+  annotate("text", x = 65, y = 0, label = "Age 65", color = "black", vjust = -0.5, hjust = -0.1) +
+  annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1)
+
+
+```
+
+## The code
+
+```{r}
+#| eval: false
+national_data <- respop_data_clean %>%
+  group_by(Age, Sex) %>%
+  summarise(Total = sum(Pop, na.rm = TRUE), .groups = 'drop') %>%
+  mutate(
+    Age = as.integer(Age),
+    Total = ifelse(Sex == "Males", -Total, Total)  # Make male population negative for pyramid
+  )
+
+# Plot the age-sex pyramid with vertical lines at Age 65 and 18
+ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Flip the plot to create a pyramid shape
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1), breaks = scales::pretty_breaks()) +  # Format y-axis
+  labs(
+    title = "Singapore Population Pyramid (2024)",
+    x = "Age",
+    y = "Population",
+    fill = "Sex"
+  ) +
+  theme_minimal() +  # Clean minimal theme
+  
+  # Add vertical lines at Age 65 and Age 18
+  geom_vline(xintercept = 65, linetype = "dashed", color = "black", size = 1) +
+  geom_vline(xintercept = 42.8, linetype = "dashed", color = "black", size = 1) +
+  
+  # Optionally, add text annotations for the lines
+  annotate("text", x = 65, y = 0, label = "Age 65", color = "black", vjust = -0.5, hjust = -0.1) +
+  annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1)
+
+```
+:::
+
+### 4.2 Proportion of males and females within each age group
+
+::: panel-tabset
+## The plot
+```{r}
+#| echo: false
+# Prepare data: group and compute proportions within each age
+stacked_data <- respop_data_clean %>%
+  group_by(Age, Sex) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  group_by(Age) %>%
+  mutate(Proportion = Pop / sum(Pop)) %>%
+  ungroup()
+
+# Plot 100% stacked bar chart
+ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = percent_format()) +
+  scale_x_continuous(breaks = seq(0, 90, 10)) +
+  labs(
+    title = "Age-Sex Distribution (100% Stacked Bar) – Singapore 2024",
+    x = "Age",
+    y = "Proportion within Age Group",
+    fill = "Sex"
+  ) +
+  theme_minimal()
+```
+## The code
+```{r}
+#| eval: false
+# Prepare data: group and compute proportions within each age
+stacked_data <- respop_data_clean %>%
+  group_by(Age, Sex) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  group_by(Age) %>%
+  mutate(Proportion = Pop / sum(Pop)) %>%
+  ungroup()
+
+# Plot 100% stacked bar chart
+ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = percent_format()) +
+  scale_x_continuous(breaks = seq(0, 90, 10)) +
+  labs(
+    title = "Age-Sex Distribution (100% Stacked Bar) – Singapore 2024",
+    x = "Age",
+    y = "Proportion within Age Group",
+    fill = "Sex"
+  ) +
+  theme_minimal()
+```
+
+:::
+
