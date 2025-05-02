@@ -1,5 +1,5 @@
 ---
-title: "Take-home Exercise 1"
+title: "Take-home Exercise 1 (WIP)"
 author: "Yi Fang"
 date: "April 30, 2025"
 date-modified: "last-modified"
@@ -8,6 +8,8 @@ editor: visual
 freeze: true
 warning: false
 ---
+
+**Please note that the following is still a work in progress.**
 
 ## 1 Overview
 
@@ -175,6 +177,7 @@ ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
 
 ::: panel-tabset
 ## The plot
+
 ```{r}
 #| echo: false
 # Prepare data: group and compute proportions within each age
@@ -198,7 +201,9 @@ ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
   ) +
   theme_minimal()
 ```
+
 ## The code
+
 ```{r}
 #| eval: false
 # Prepare data: group and compute proportions within each age
@@ -222,6 +227,4 @@ ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
   ) +
   theme_minimal()
 ```
-
 :::
-

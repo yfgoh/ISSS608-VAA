@@ -445,9 +445,9 @@
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html",
-    "title": "Take-home Exercise 1",
+    "title": "Take-home Exercise 1 (WIP)",
     "section": "",
-    "text": "With reference to Singstat, Singapore’s resident population, consisting of citizens and permanent residents, stands at 4.18 million in 2024, with close to 20% of residents aged 65 and above. The population is distributed across 55 planning areas and 332 subzones. Due to the nation’s limited land space, the majority of its highly urbanized residents live in densely populated areas, a trend that will play a crucial role in shaping the country’s future policies and growth.\n\n\n\nThis exercise will assume the role of a graphical editor of a media company planning to release an article on demographic structures and distribution of Singapore in 2024.\nThe data will be processed by using appropriate tidyverse family of packages and the data visualisation will be prepared using ggplot2 and its extensions.",
+    "text": "Please note that the following is still a work in progress.",
     "crumbs": [
       "Home",
       "Take-home Exercise 1"
@@ -478,9 +478,9 @@
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#overview",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#overview",
-    "title": "Take-home Exercise 1",
-    "section": "",
-    "text": "With reference to Singstat, Singapore’s resident population, consisting of citizens and permanent residents, stands at 4.18 million in 2024, with close to 20% of residents aged 65 and above. The population is distributed across 55 planning areas and 332 subzones. Due to the nation’s limited land space, the majority of its highly urbanized residents live in densely populated areas, a trend that will play a crucial role in shaping the country’s future policies and growth.\n\n\n\nThis exercise will assume the role of a graphical editor of a media company planning to release an article on demographic structures and distribution of Singapore in 2024.\nThe data will be processed by using appropriate tidyverse family of packages and the data visualisation will be prepared using ggplot2 and its extensions.",
+    "title": "Take-home Exercise 1 (WIP)",
+    "section": "1 Overview",
+    "text": "1 Overview\n\n1.1 Background\nWith reference to Singstat, Singapore’s resident population, consisting of citizens and permanent residents, stands at 4.18 million in 2024, with close to 20% of residents aged 65 and above. The population is distributed across 55 planning areas and 332 subzones. Due to the nation’s limited land space, the majority of its highly urbanized residents live in densely populated areas, a trend that will play a crucial role in shaping the country’s future policies and growth.\n\n\n1.2 Objectives\nThis exercise will assume the role of a graphical editor of a media company planning to release an article on demographic structures and distribution of Singapore in 2024.\nThe data will be processed by using appropriate tidyverse family of packages and the data visualisation will be prepared using ggplot2 and its extensions.",
     "crumbs": [
       "Home",
       "Take-home Exercise 1"
@@ -489,7 +489,7 @@
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#getting-started",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#getting-started",
-    "title": "Take-home Exercise 1",
+    "title": "Take-home Exercise 1 (WIP)",
     "section": "2 Getting started",
     "text": "2 Getting started\n\n2.1 Load packages\nThe following R packages will be loaded using the pacman::p_load() function.\n\nggrepel: an R package provides geoms for ggplot2 to repel overlapping text labels.\nggthemes: an R package provides some extra themes, geoms, and scales for ‘ggplot2’.\nhrbrthemes: an R package provides typography-centric themes and theme components for ggplot2.\npatchwork: an R package for preparing composite figure created using ggplot2.\n\n\npacman::p_load(ggrepel, patchwork, \n               ggthemes, hrbrthemes,\n               tidyverse, ggplot2, dplyr, scales) \n\n\n\n2.2 Import data\nThis exercise will be using Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024 dataset shared by Department of Statistics, Singapore (DOS) Proceed to load the dataset with the following code.\n\nrespop_data &lt;- read_csv(\"data/respopagesex2024.csv\")",
     "crumbs": [
@@ -500,7 +500,7 @@
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#data-wrangling",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#data-wrangling",
-    "title": "Take-home Exercise 1",
+    "title": "Take-home Exercise 1 (WIP)",
     "section": "3 Data Wrangling",
     "text": "3 Data Wrangling\nUsing glimpse() function, we get an overview of the dataset.\n\nglimpse(respop_data)\n\nRows: 60,424\nColumns: 6\n$ PA   &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo K…\n$ SZ   &lt;chr&gt; \"Ang Mo Kio Town Centre\", \"Ang Mo Kio Town Centre\", \"Ang Mo Kio T…\n$ Age  &lt;chr&gt; \"0\", \"0\", \"1\", \"1\", \"2\", \"2\", \"3\", \"3\", \"4\", \"4\", \"5\", \"5\", \"6\", …\n$ Sex  &lt;chr&gt; \"Males\", \"Females\", \"Males\", \"Females\", \"Males\", \"Females\", \"Male…\n$ Pop  &lt;dbl&gt; 10, 10, 10, 10, 10, 10, 10, 10, 30, 10, 20, 10, 20, 30, 30, 10, 3…\n$ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024,…\n\n\nWe see that the dataset has 60,424 rows with 6 columns. It also shows the data type for each column.\n\n3.1 Check for duplicates\nUsing the duplicated function, we check for duplicates in the dataset.\n\nrespop_data[duplicated(respop_data),]\n\n# A tibble: 0 × 6\n# ℹ 6 variables: PA &lt;chr&gt;, SZ &lt;chr&gt;, Age &lt;chr&gt;, Sex &lt;chr&gt;, Pop &lt;dbl&gt;,\n#   Time &lt;dbl&gt;\n\n\nAs indicated in the results, there are no duplicates.\n\n\n3.2 Check for missing values\nUsing the code below, we will check for missing values.\n\nfor(column_name in names(respop_data)) {\n  na_count &lt;- sum(is.na(respop_data[[column_name]]))\n\n  if (na_count &gt; 0) {\n    message(\"Column '\", column_name, \"' has \", na_count, \" NA values.\")\n  }\n}\n\n\n\n3.3 Filtering data\nFor Age column, it is categorical as 90 and above are grouped into one category. For this exercise, ‘90 and above’ was excluded to ensure that Age could be treated as a numeric variable. This allows for proper analysis and visualisation. The following code will exclude 90 and above and cast Age as numeric.\n\nrespop_data_clean &lt;- respop_data %&gt;%\n  filter(Age != \"90_and_Over\") %&gt;%\n  mutate(Age = as.numeric(Age))",
     "crumbs": [
@@ -511,7 +511,7 @@
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#data-visualisation",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html#data-visualisation",
-    "title": "Take-home Exercise 1",
+    "title": "Take-home Exercise 1 (WIP)",
     "section": "4 Data visualisation",
     "text": "4 Data visualisation\n\n4.1 Age-Sex Pyramid on a National Level\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nnational_data &lt;- respop_data_clean %&gt;%\n  group_by(Age, Sex) %&gt;%\n  summarise(Total = sum(Pop, na.rm = TRUE), .groups = 'drop') %&gt;%\n  mutate(\n    Age = as.integer(Age),\n    Total = ifelse(Sex == \"Males\", -Total, Total)  # Make male population negative for pyramid\n  )\n\n# Plot the age-sex pyramid with vertical lines at Age 65 and 18\nggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +\n  geom_bar(stat = \"identity\") +\n  coord_flip() +  # Flip the plot to create a pyramid shape\n  scale_y_continuous(labels = scales::comma_format(accuracy = 1), breaks = scales::pretty_breaks()) +  # Format y-axis\n  labs(\n    title = \"Singapore Population Pyramid (2024)\",\n    x = \"Age\",\n    y = \"Population\",\n    fill = \"Sex\"\n  ) +\n  theme_minimal() +  # Clean minimal theme\n  \n  # Add vertical lines at Age 65 and Age 18\n  geom_vline(xintercept = 65, linetype = \"dashed\", color = \"black\", size = 1) +\n  geom_vline(xintercept = 42.8, linetype = \"dashed\", color = \"black\", size = 1) +\n  \n  # Optionally, add text annotations for the lines\n  annotate(\"text\", x = 65, y = 0, label = \"Age 65\", color = \"black\", vjust = -0.5, hjust = -0.1) +\n  annotate(\"text\", x = 42.8, y = 0, label = \"Median Age = 42.8\", color = \"black\", vjust = -0.5, hjust = -0.1)\n\n\n\n\n\n\n4.2 Proportion of males and females within each age group\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# Prepare data: group and compute proportions within each age\nstacked_data &lt;- respop_data_clean %&gt;%\n  group_by(Age, Sex) %&gt;%\n  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = \"drop\") %&gt;%\n  group_by(Age) %&gt;%\n  mutate(Proportion = Pop / sum(Pop)) %&gt;%\n  ungroup()\n\n# Plot 100% stacked bar chart\nggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +\n  geom_bar(stat = \"identity\") +\n  scale_y_continuous(labels = percent_format()) +\n  scale_x_continuous(breaks = seq(0, 90, 10)) +\n  labs(\n    title = \"Age-Sex Distribution (100% Stacked Bar) – Singapore 2024\",\n    x = \"Age\",\n    y = \"Proportion within Age Group\",\n    fill = \"Sex\"\n  ) +\n  theme_minimal()",
     "crumbs": [
