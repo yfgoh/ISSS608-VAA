@@ -41,7 +41,7 @@ The following R packages will be loaded using the `pacman::p_load()` function.
 pacman::p_load(ggrepel, patchwork, 
                ggthemes, hrbrthemes,
                tidyverse, ggplot2, dplyr, scales,
-               ggdist, ggridges, gridExtra) 
+               ggdist, ggridges, gridExtra, Hmisc) 
 ```
 
 ### 2.2 Import data
@@ -86,13 +86,13 @@ for(column_name in names(respop_data)) {
 }
 ```
 
-### 3.3 Filtering data
+### 3.3 Recoding
 
-For Age column, it is categorical as 90 and above are grouped into one category. For this exercise, '90 and above' was excluded to ensure that Age could be treated as a numeric variable. This allows for proper analysis and visualisation. The following code will exclude 90 and above and cast Age as numeric.
+For Age column, it is categorical due to the inclusion of an open-ended group, `90_and_Over`. For this exercise, `90_and_Over` was recoded to 90 to ensure that Age could be treated as a numeric variable while still including this group in the analysis. This ensures that the data can be properly analysed and visualised. The following code will recode `90_and_Over` to `90` and cast Age as numeric.
 
 ```{r}
 respop_data_clean <- respop_data %>%
-  filter(Age != "90_and_Over") %>%
+  mutate(Age = ifelse(Age == "90_and_Over", "90", Age)) %>%
   mutate(Age = as.numeric(Age))
 
 ```
@@ -255,7 +255,7 @@ grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
 -   The national population pyramid highlights an ageing demographic, with a prominent bulge at the center of the pyramid. This bulge represents the largest cohort, aged 40 to 54, signals a maturing population.
 -   Furthermore, a notable proportion of individuals fall within the age range of the median age of 42.8 (Singstat, 2024) to 65, the threshold for senior citizens, highlighting the growing proportion of elderly residents.
 -   In contrast, the narrowing base below the median age reflects persistently low birth rates and a shrinking younger population.
--   The overall shape of the pyramid is symmetrical, indicating a relatively balanced distribution between males and females. However, the females slightly outnumber males in the older age groups as seen in the stacked bar chart.
+-   The overall shape of the pyramid is symmetrical, indicating a relatively balanced distribution between males and females. However, the females slightly outnumber males in the older age, especially from the late 70s as seen in the stacked bar chart.
 
 ### 4.2 Age group distribution across regions
 
@@ -264,12 +264,13 @@ grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
 
 ```{r}
 #| echo: false
-respop_data_clean %>%
+#| fig-width: 13
+age_group_plot <- respop_data_clean %>%
   mutate(Age_Group = cut(Age, breaks = c(0, 14, 24, 44, 64, Inf),
                          labels = c("0-14", "15-24", "25-44", "45-64", "65+"))) %>%
+  filter(!is.na(Age_Group)) %>%  
   group_by(Region, Age_Group) %>%
   summarise(Total_Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
-  # Order regions by descending population
   mutate(Region = fct_reorder(Region, Total_Pop, .fun = sum, .desc = TRUE)) %>%
   ggplot(aes(x = Region, y = Total_Pop, fill = Age_Group)) +
   geom_bar(stat = "identity") +
@@ -282,18 +283,51 @@ respop_data_clean %>%
                                "65+" = "#E0B0FF")) +  
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Second plot (Slope Chart for Youth vs Senior Population)
+youth_senior_data <- respop_data_clean %>%
+  mutate(Age_Group = case_when(
+    Age <= 24 ~ "Youth (0–24)",
+    Age >= 65 ~ "Senior (65+)",
+    TRUE ~ NA_character_
+  )) %>%
+  filter(!is.na(Age_Group)) %>%
+  group_by(Region, Age_Group) %>%
+  summarise(Total_Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(names_from = Age_Group, values_from = Total_Pop) %>%
+  mutate(
+    `Youth-to-Senior Ratio` = `Youth (0–24)` / `Senior (65+)`
+  ) %>%
+  pivot_longer(
+    cols = c(`Youth (0–24)`, `Senior (65+)`),
+    names_to = "Group",
+    values_to = "Population"
+  )
+
+# Slope chart plot
+slope_chart_plot <- ggplot(youth_senior_data, aes(x = Group, y = Population, group = Region)) +
+  geom_line(aes(color = Region), size = 1) +
+  geom_point(aes(color = Region), size = 3) +
+  labs(title = "Youth vs Senior Population by Region",
+       subtitle = "Comparing age structure across regions using a slope chart",
+       x = "", y = "Population") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+# Combine both plots side by side
+age_group_plot + slope_chart_plot
 ```
 
 ## The code
 
 ```{r}
 #| eval: false
-respop_data_clean %>%
+age_group_plot <- respop_data_clean %>%
   mutate(Age_Group = cut(Age, breaks = c(0, 14, 24, 44, 64, Inf),
                          labels = c("0-14", "15-24", "25-44", "45-64", "65+"))) %>%
+  filter(!is.na(Age_Group)) %>%  
   group_by(Region, Age_Group) %>%
   summarise(Total_Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
-  # Order regions by descending population
   mutate(Region = fct_reorder(Region, Total_Pop, .fun = sum, .desc = TRUE)) %>%
   ggplot(aes(x = Region, y = Total_Pop, fill = Age_Group)) +
   geom_bar(stat = "identity") +
@@ -306,8 +340,53 @@ respop_data_clean %>%
                                "65+" = "#E0B0FF")) +  
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Second plot (Slope Chart for Youth vs Senior Population)
+youth_senior_data <- respop_data_clean %>%
+  mutate(Age_Group = case_when(
+    Age <= 24 ~ "Youth (0–24)",
+    Age >= 65 ~ "Senior (65+)",
+    TRUE ~ NA_character_
+  )) %>%
+  filter(!is.na(Age_Group)) %>%
+  group_by(Region, Age_Group) %>%
+  summarise(Total_Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(names_from = Age_Group, values_from = Total_Pop) %>%
+  mutate(
+    `Youth-to-Senior Ratio` = `Youth (0–24)` / `Senior (65+)`
+  ) %>%
+  pivot_longer(
+    cols = c(`Youth (0–24)`, `Senior (65+)`),
+    names_to = "Group",
+    values_to = "Population"
+  )
+
+# Slope chart plot
+slope_chart_plot <- ggplot(youth_senior_data, aes(x = Group, y = Population, group = Region)) +
+  geom_line(aes(color = Region), size = 1) +
+  geom_point(aes(color = Region), size = 3) +
+  labs(title = "Youth vs Senior Population by Region",
+       subtitle = "Comparing age structure across regions using a slope chart",
+       x = "", y = "Population") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+# Combine both plots side by side
+age_group_plot + slope_chart_plot
 ```
 :::
+
+**Insights**
+
+-   The North-East region is the most populous, followed closely by the Central and West regions. In contrast, the East and North regions have significantly smaller populations.
+
+-   The North-East also has the highest proportion of children aged 0–14, reinforcing its reputation as a family-oriented region popular with young households.
+
+-   The Central region has the highest concentration of senior citizens (aged 65 and above), followed by the North-East and West regions, while the North region has the smallest senior population.
+
+-   Age groups of 0-14 and 15-24 remain relatively small across all regions, reflecting a broader national trend of declining birth rates.
+
+- The Central region stands out with a near-equal number of youths (aged 0–24) and seniors (65+). Despite signs of ageing, each region still has more youths than seniors, highlighting the continued presence of younger populations alongside an ageing demographic.
 
 ### 4.3
 
@@ -330,6 +409,7 @@ ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Region)) +
         plot.subtitle = element_text(size = 9),
         axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1))
 ```
+
 ```{r}
 # Ensure Age is numeric and Pop is used as the weight
 respop_data_clean <- respop_data_clean %>%
@@ -369,6 +449,7 @@ ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Sex)) +
   ) +
   scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
 ```
+
 ```{r}
 # Prepare the data: make sure Age is numeric and Region is a factor
 respop_data_clean <- respop_data_clean %>%
@@ -395,9 +476,47 @@ ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Region)) +
 
 
 
+```{r}
+respop_data_clean %>%
+  ggplot(aes(x = Age, y = Region, 
+             height = after_stat(density), 
+             fill = Region, weight = Pop)) +
+  geom_density_ridges(stat = "density", scale = 3, alpha = 0.7, color = "white") +
+  labs(title = "Weighted Age Density Distribution by Region",
+       x = "Age", y = "Region") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
 
 
+```{r}
+box_data <- respop_data_clean %>%
+  group_by(Region) %>%
+  summarise(
+    Min = wtd.quantile(Age, weights = Pop, probs = 0, na.rm = TRUE),
+    Q1 = wtd.quantile(Age, weights = Pop, probs = 0.25, na.rm = TRUE),
+    Median = wtd.quantile(Age, weights = Pop, probs = 0.5, na.rm = TRUE),
+    Mean = weighted.mean(Age, w = Pop, na.rm = TRUE),
+    Q3 = wtd.quantile(Age, weights = Pop, probs = 0.75, na.rm = TRUE),
+    Max = wtd.quantile(Age, weights = Pop, probs = 1, na.rm = TRUE),
+    .groups = "drop"
+  )
 
-## Reference
+# Create the plot with weighted quantiles
+ggplot(box_data, aes(y = Region)) +  # Set y = Region for the horizontal plot
+  # Boxplot elements using geom_segment
+  geom_segment(aes(x = Min, xend = Max, y = Region, yend = Region), size = 1, color = "black") +  # Whiskers (Min, Max)
+  geom_segment(aes(x = Q1, xend = Q3, y = Region, yend = Region), size = 5, color = "#8593B5") +  # Box (Q1 to Q3)
+  geom_point(aes(x = Mean, y = Region), size = 4, color = "#8F6798") +  # Mean as dot
+  geom_segment(aes(x = Median, xend = Median, y = Region, yend = Region), size = 1.5, color = "red") +  # Median line inside box
+  labs(title = "Horizontal Weighted Boxplot of Age by Region",
+       x = "Age", y = "Region") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
+  coord_cartesian(xlim = c(0, 100))
+```
+
+
+## 5 Reference
 
 -   [Singstat](https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data)
