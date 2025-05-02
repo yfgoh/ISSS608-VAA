@@ -40,7 +40,8 @@ The following R packages will be loaded using the `pacman::p_load()` function.
 ```{r}
 pacman::p_load(ggrepel, patchwork, 
                ggthemes, hrbrthemes,
-               tidyverse, ggplot2, dplyr, scales) 
+               tidyverse, ggplot2, dplyr, scales,
+               ggdist, ggridges, gridExtra) 
 ```
 
 ### 2.2 Import data
@@ -96,6 +97,38 @@ respop_data_clean <- respop_data %>%
 
 ```
 
+### 3.4 Creating new column
+
+With reference to [URA Master Plan 2025](https://eservice.ura.gov.sg/maps/?service=MP), the 55 planning areas are classified into their respective regions with the following code.
+
+```{r}
+region_mapping <- c(
+  "Ang Mo Kio" = "North-East", "Bedok" = "East", "Bishan" = "Central", 
+  "Boon Lay" = "West", "Bukit Batok" = "West", "Bukit Merah" = "Central", 
+  "Bukit Panjang" = "West", "Bukit Timah" = "Central", "Central Water Catchment" = "North", 
+  "Changi" = "East", "Changi Bay" = "East", "Choa Chu Kang" = "West", 
+  "Clementi" = "West", "Downtown Core" = "Central", "Geylang" = "Central", 
+  "Hougang" = "North-East", "Jurong East" = "West", "Jurong West" = "West", 
+  "Kallang" = "Central", "Lim Chu Kang" = "North", "Mandai" = "North", 
+  "Marina East" = "Central", "Marina South" = "Central", "Marine Parade" = "Central", 
+  "Museum" = "Central", "Newton" = "Central", "North-Eastern Islands" = "North-East", 
+  "Novena" = "Central", "Orchard" = "Central", "Outram" = "Central", 
+  "Pasir Ris" = "East", "Paya Lebar" = "East", "Pioneer" = "West", 
+  "Punggol" = "North-East", "Queenstown" = "Central", "River Valley" = "Central", 
+  "Rochor" = "Central", "Seletar" = "North-East", "Sembawang" = "North", 
+  "Sengkang" = "North-East", "Serangoon" = "North-East", "Simpang" = "North", 
+  "Singapore River" = "Central", "Southern Islands" = "Central", "Straits View" = "Central", 
+  "Sungei Kadut" = "North", "Tampines" = "East", "Tanglin" = "Central", 
+  "Tengah" = "West", "Toa Payoh" = "Central", "Tuas" = "West", 
+  "Western Islands" = "West", "Western Water Catchment" = "West", "Woodlands" = "North", 
+  "Yishun" = "North"
+)
+
+respop_data_clean <- respop_data_clean %>%
+  mutate(Region = region_mapping[PA])
+
+```
+
 ## 4 Data visualisation
 
 ### 4.1 Age-Sex Pyramid on a National Level
@@ -105,6 +138,8 @@ respop_data_clean <- respop_data %>%
 
 ```{r}
 #| echo: false
+#| fig-width: 13
+# Prepare data for Population Pyramid
 national_data <- respop_data_clean %>%
   group_by(Age, Sex) %>%
   summarise(Total = sum(Pop, na.rm = TRUE), .groups = 'drop') %>%
@@ -113,34 +148,55 @@ national_data <- respop_data_clean %>%
     Total = ifelse(Sex == "Males", -Total, Total)  # Make male population negative for pyramid
   )
 
-# Plot the age-sex pyramid with vertical lines at Age 65 and 18
-ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
+# Population Pyramid plot
+pyramid_plot <- ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
   geom_bar(stat = "identity") +
   coord_flip() +  # Flip the plot to create a pyramid shape
   scale_y_continuous(labels = scales::comma_format(accuracy = 1), breaks = scales::pretty_breaks()) +  # Format y-axis
   labs(
-    title = "Singapore Population Pyramid (2024)",
+    title = "Population Pyramid",
     x = "Age",
     y = "Population",
     fill = "Sex"
   ) +
-  theme_minimal() +  # Clean minimal theme
-  
-  # Add vertical lines at Age 65 and Age 18
+  theme_minimal() +  
   geom_vline(xintercept = 65, linetype = "dashed", color = "black", size = 1) +
   geom_vline(xintercept = 42.8, linetype = "dashed", color = "black", size = 1) +
-  
-  # Optionally, add text annotations for the lines
   annotate("text", x = 65, y = 0, label = "Age 65", color = "black", vjust = -0.5, hjust = -0.1) +
-  annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1)
+  annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1) +
+  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
 
+# Prepare data for 100% Stacked Bar Chart
+stacked_data <- respop_data_clean %>%
+  group_by(Age, Sex) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  group_by(Age) %>%
+  mutate(Proportion = Pop / sum(Pop)) %>%
+  ungroup()
 
+# 100% Stacked Bar Chart plot
+stacked_bar_plot <- ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_continuous(breaks = seq(0, 90, 10)) +
+  labs(
+    title = "Age-Sex Distribution",
+    x = "Age",
+    y = "Proportion within Age Group",
+    fill = "Sex"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+
+# Arrange both plots side by side
+grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
 ```
 
 ## The code
 
 ```{r}
 #| eval: false
+# Prepare data for Population Pyramid
 national_data <- respop_data_clean %>%
   group_by(Age, Sex) %>%
   summarise(Total = sum(Pop, na.rm = TRUE), .groups = 'drop') %>%
@@ -149,82 +205,199 @@ national_data <- respop_data_clean %>%
     Total = ifelse(Sex == "Males", -Total, Total)  # Make male population negative for pyramid
   )
 
-# Plot the age-sex pyramid with vertical lines at Age 65 and 18
-ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
+# Population Pyramid plot
+pyramid_plot <- ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
   geom_bar(stat = "identity") +
   coord_flip() +  # Flip the plot to create a pyramid shape
   scale_y_continuous(labels = scales::comma_format(accuracy = 1), breaks = scales::pretty_breaks()) +  # Format y-axis
   labs(
-    title = "Singapore Population Pyramid (2024)",
+    title = "Population Pyramid",
     x = "Age",
     y = "Population",
     fill = "Sex"
   ) +
-  theme_minimal() +  # Clean minimal theme
-  
-  # Add vertical lines at Age 65 and Age 18
+  theme_minimal() + 
   geom_vline(xintercept = 65, linetype = "dashed", color = "black", size = 1) +
   geom_vline(xintercept = 42.8, linetype = "dashed", color = "black", size = 1) +
-  
-  # Optionally, add text annotations for the lines
   annotate("text", x = 65, y = 0, label = "Age 65", color = "black", vjust = -0.5, hjust = -0.1) +
-  annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1)
+  annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1) +
+  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
 
+# Prepare data for 100% Stacked Bar Chart
+stacked_data <- respop_data_clean %>%
+  group_by(Age, Sex) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  group_by(Age) %>%
+  mutate(Proportion = Pop / sum(Pop)) %>%
+  ungroup()
+
+# 100% Stacked Bar Chart plot
+stacked_bar_plot <- ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_continuous(breaks = seq(0, 90, 10)) +
+  labs(
+    title = "Age-Sex Distribution",
+    x = "Age",
+    y = "Proportion within Age Group",
+    fill = "Sex"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+
+# Arrange both plots side by side
+grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
 ```
 :::
 
-### 4.2 Proportion of males and females within each age group
+**Insights**
+
+-   The national population pyramid highlights an ageing demographic, with a prominent bulge at the center of the pyramid. This bulge represents the largest cohort, aged 40 to 54, signals a maturing population.
+-   Furthermore, a notable proportion of individuals fall within the age range of the median age of 42.8 (Singstat, 2024) to 65, the threshold for senior citizens, highlighting the growing proportion of elderly residents.
+-   In contrast, the narrowing base below the median age reflects persistently low birth rates and a shrinking younger population.
+-   The overall shape of the pyramid is symmetrical, indicating a relatively balanced distribution between males and females. However, the females slightly outnumber males in the older age groups as seen in the stacked bar chart.
+
+### 4.2 Age group distribution across regions
 
 ::: panel-tabset
 ## The plot
 
 ```{r}
 #| echo: false
-# Prepare data: group and compute proportions within each age
-stacked_data <- respop_data_clean %>%
-  group_by(Age, Sex) %>%
-  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
-  group_by(Age) %>%
-  mutate(Proportion = Pop / sum(Pop)) %>%
-  ungroup()
-
-# Plot 100% stacked bar chart
-ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
+respop_data_clean %>%
+  mutate(Age_Group = cut(Age, breaks = c(0, 14, 24, 44, 64, Inf),
+                         labels = c("0-14", "15-24", "25-44", "45-64", "65+"))) %>%
+  group_by(Region, Age_Group) %>%
+  summarise(Total_Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  # Order regions by descending population
+  mutate(Region = fct_reorder(Region, Total_Pop, .fun = sum, .desc = TRUE)) %>%
+  ggplot(aes(x = Region, y = Total_Pop, fill = Age_Group)) +
   geom_bar(stat = "identity") +
-  scale_y_continuous(labels = percent_format()) +
-  scale_x_continuous(breaks = seq(0, 90, 10)) +
-  labs(
-    title = "Age-Sex Distribution (100% Stacked Bar) – Singapore 2024",
-    x = "Age",
-    y = "Proportion within Age Group",
-    fill = "Sex"
-  ) +
-  theme_minimal()
+  labs(title = "Age Group Distribution by Region",
+       x = "Region", y = "Population", fill = "Age Group") +
+  scale_fill_manual(values = c("0-14" = "#FFB6C1",
+                               "15-24" = "#B3D9FF", 
+                               "25-44" = "#A7D8C7", 
+                               "45-64" = "#FFD1A9",  
+                               "65+" = "#E0B0FF")) +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ## The code
 
 ```{r}
 #| eval: false
-# Prepare data: group and compute proportions within each age
-stacked_data <- respop_data_clean %>%
-  group_by(Age, Sex) %>%
-  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
-  group_by(Age) %>%
-  mutate(Proportion = Pop / sum(Pop)) %>%
-  ungroup()
-
-# Plot 100% stacked bar chart
-ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion, fill = Sex)) +
+respop_data_clean %>%
+  mutate(Age_Group = cut(Age, breaks = c(0, 14, 24, 44, 64, Inf),
+                         labels = c("0-14", "15-24", "25-44", "45-64", "65+"))) %>%
+  group_by(Region, Age_Group) %>%
+  summarise(Total_Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  # Order regions by descending population
+  mutate(Region = fct_reorder(Region, Total_Pop, .fun = sum, .desc = TRUE)) %>%
+  ggplot(aes(x = Region, y = Total_Pop, fill = Age_Group)) +
   geom_bar(stat = "identity") +
-  scale_y_continuous(labels = percent_format()) +
-  scale_x_continuous(breaks = seq(0, 90, 10)) +
-  labs(
-    title = "Age-Sex Distribution (100% Stacked Bar) – Singapore 2024",
-    x = "Age",
-    y = "Proportion within Age Group",
-    fill = "Sex"
-  ) +
-  theme_minimal()
+  labs(title = "Age Group Distribution by Region",
+       x = "Region", y = "Population", fill = "Age Group") +
+  scale_fill_manual(values = c("0-14" = "#FFB6C1",
+                               "15-24" = "#B3D9FF", 
+                               "25-44" = "#A7D8C7", 
+                               "45-64" = "#FFD1A9",  
+                               "65+" = "#E0B0FF")) +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 :::
+
+### 4.3
+
+```{r}
+# Prepare the data: make sure Age is numeric and Region is a factor
+respop_data_clean <- respop_data_clean %>%
+  mutate(Age = as.numeric(Age),
+         Region = as.factor(Region))
+
+# Histogram with Population as weight
+ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Region)) +
+  geom_histogram(binwidth = 1, alpha = 0.6, position = "stack") +
+  facet_wrap(~ Region, scales = "free_y") +  # Faceting by Region
+  labs(title = "Age Distribution Across Regions in Singapore (2024)",
+       subtitle = "Histogram showing the population distribution by age and region",
+       x = "Age", y = "Population") +
+  theme_minimal() +
+  scale_fill_viridis_d(name = "Region") +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(size = 9),
+        axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1))
+```
+```{r}
+# Ensure Age is numeric and Pop is used as the weight
+respop_data_clean <- respop_data_clean %>%
+  mutate(Age = as.numeric(Age))  # Ensure Age is numeric
+
+# Create weighted violin plot for Age distribution across regions
+ggplot(respop_data_clean, aes(x = Region, y = Age, weight = Pop, fill = Region)) +
+  geom_violin(alpha = 0.6) +  # Violin plot with transparency
+  labs(title = "Age Distribution Across Regions in Singapore (2024)",
+       subtitle = "Violin plot showing the age distribution by region, weighted by population",
+       x = "Region", y = "Age") +
+  theme_minimal() +
+  scale_fill_viridis_d(name = "Region") +  # Color by Region
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(size = 9),
+        axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1),
+        axis.title.x = element_text(vjust = 0.5),
+        strip.text = element_text(size = 10))  # Adjust facet label size
+
+```
+
+```{r}
+ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Sex)) +
+  geom_density(alpha = 0.6) +
+  facet_wrap(~ Region, ncol = 1, scales = "free_y") +
+  labs(
+    title = "Age Distribution by Region and Gender (2024)",
+    x = "Age",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    strip.text = element_text(face = "bold"),
+    axis.text.y = element_blank(),
+    legend.title = element_blank()
+  ) +
+  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+```
+```{r}
+# Prepare the data: make sure Age is numeric and Region is a factor
+respop_data_clean <- respop_data_clean %>%
+  mutate(Age = as.numeric(Age),
+         Region = as.factor(Region))
+
+# Histogram with Population as weight, vertically stacked by Region
+ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Region)) +
+  geom_histogram(binwidth = 1, alpha = 0.6, position = "stack") +
+  facet_wrap(~ Region, ncol = 1, scales = "free_y") +  # <-- ncol = 1 for vertical stacking
+  labs(title = "Age Distribution Across Regions in Singapore (2024)",
+       subtitle = "Histogram showing the population distribution by age and region",
+       x = "Age", y = "Population") +
+  theme_minimal() +
+  scale_fill_viridis_d(name = "Region") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(size = 9),
+    axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1)
+  )
+
+
+```
+
+
+
+
+
+
+## Reference
+
+-   [Singstat](https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data)
