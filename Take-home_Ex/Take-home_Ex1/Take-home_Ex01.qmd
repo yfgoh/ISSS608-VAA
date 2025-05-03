@@ -135,11 +135,11 @@ respop_data_clean <- respop_data_clean %>%
 To gain an overview of the national age and sex demographics, we use a population pyramid that highlights the age distribution by sex. The stacked bar chart further illustrates the sex distribution within each age group.
 
 ::: panel-tabset
-## The plot
+## Plot
 
 ```{r}
 #| echo: false
-#| fig-width: 13
+#| fig-width: 11
 # Create 5-year age bands
 national_data <- respop_data_clean %>%
   mutate(Age = as.integer(Age)) %>%
@@ -160,7 +160,7 @@ national_data <- respop_data_clean %>%
 
 # Determine max population size for label positioning
 max_pop <- max(abs(national_data$Total))
-top_age_band <- tail(levels(national_data$AgeBand), 1)  # "90+"
+top_age_band <- tail(levels(national_data$AgeBand), 1)  
 
 # Population Pyramid plot with 90+ and top annotations
 pyramid_plot <- ggplot(national_data, aes(x = AgeBand, y = Total, fill = Sex)) +
@@ -171,18 +171,18 @@ pyramid_plot <- ggplot(national_data, aes(x = AgeBand, y = Total, fill = Sex)) +
     breaks = pretty_breaks()
   ) +
   labs(
-    title = "Population Pyramid (5-Year Age Bands)",
+    title = "Population Pyramid",
     x = "Age Group",
     y = "Population"
   ) +
-  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0")) +
+  scale_fill_manual(values = c("Males" = "#A1B8E0", "Females" = "#F8C1C1")) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5),
     legend.position = "none"
   ) +
-  annotate("text", x = top_age_band, y = -max_pop * 0.9, label = "Males", color = "#7A90C9", fontface = "bold", size = 5) +
-  annotate("text", x = top_age_band, y = max_pop * 0.9, label = "Females", color = "#F7A1A0", fontface = "bold", size = 5)
+  annotate("text", x = top_age_band, y = -max_pop * 0.5, label = "Males", color = "#4A4A4A", fontface = "bold", size = 3) +
+  annotate("text", x = top_age_band, y = max_pop * 0.5, label = "Females", color = "#4A4A4A", fontface = "bold", size = 3)
 
 stacked_data <- respop_data_clean %>%
   mutate(Age = as.integer(Age)) %>%
@@ -206,25 +206,28 @@ stacked_bar_plot <- ggplot(stacked_data, aes(x = AgeBand, y = Proportion, fill =
   geom_bar(stat = "identity", width = 0.8) +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(
-    title = "Age-Sex Distribution (5-Year Age Bands)",
+    title = "Age-Sex Distribution",
     x = "Age Group",
-    y = "Proportion within Age Group",
-    fill = "Sex"
+    y = "Proportion within Age Group"
   ) +
-  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0")) +
+  scale_fill_manual(values = c("Males" = "#A1B8E0", "Females" = "#F8C1C1")) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5),
     axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom"
-  )
+    legend.position = "none"  
+  ) +
+  # Annotate "Males" label
+  annotate("text", x = 2, y = 0.3, label = "Males", color = "#4A4A4A", fontface = "bold", size = 3) +
+  # Annotate "Females" label
+  annotate("text", x = 2, y = 0.9, label = "Females", color = "#4A4A4A", fontface = "bold", size = 3)
 
 
 # Arrange both plots side by side
 pyramid_plot + stacked_bar_plot
 ```
 
-## The code
+## Code
 
 ```{r}
 #| eval: false
@@ -248,7 +251,7 @@ national_data <- respop_data_clean %>%
 
 # Determine max population size for label positioning
 max_pop <- max(abs(national_data$Total))
-top_age_band <- tail(levels(national_data$AgeBand), 1)  # "90+"
+top_age_band <- tail(levels(national_data$AgeBand), 1)  
 
 # Population Pyramid plot with 90+ and top annotations
 pyramid_plot <- ggplot(national_data, aes(x = AgeBand, y = Total, fill = Sex)) +
@@ -259,18 +262,18 @@ pyramid_plot <- ggplot(national_data, aes(x = AgeBand, y = Total, fill = Sex)) +
     breaks = pretty_breaks()
   ) +
   labs(
-    title = "Population Pyramid (5-Year Age Bands)",
+    title = "Population Pyramid",
     x = "Age Group",
     y = "Population"
   ) +
-  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0")) +
+  scale_fill_manual(values = c("Males" = "#A1B8E0", "Females" = "#F8C1C1")) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5),
     legend.position = "none"
   ) +
-  annotate("text", x = top_age_band, y = -max_pop * 0.9, label = "Males", color = "#7A90C9", fontface = "bold", size = 5) +
-  annotate("text", x = top_age_band, y = max_pop * 0.9, label = "Females", color = "#F7A1A0", fontface = "bold", size = 5)
+  annotate("text", x = top_age_band, y = -max_pop * 0.5, label = "Males", color = "#4A4A4A", fontface = "bold", size = 3) +
+  annotate("text", x = top_age_band, y = max_pop * 0.5, label = "Females", color = "#4A4A4A", fontface = "bold", size = 3)
 
 stacked_data <- respop_data_clean %>%
   mutate(Age = as.integer(Age)) %>%
@@ -294,18 +297,21 @@ stacked_bar_plot <- ggplot(stacked_data, aes(x = AgeBand, y = Proportion, fill =
   geom_bar(stat = "identity", width = 0.8) +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(
-    title = "Age-Sex Distribution (5-Year Age Bands)",
+    title = "Age-Sex Distribution",
     x = "Age Group",
-    y = "Proportion within Age Group",
-    fill = "Sex"
+    y = "Proportion within Age Group"
   ) +
-  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0")) +
+  scale_fill_manual(values = c("Males" = "#A1B8E0", "Females" = "#F8C1C1")) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5),
     axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom"
-  )
+    legend.position = "none"  
+  ) +
+  # Annotate "Males" label
+  annotate("text", x = 2, y = 0.3, label = "Males", color = "#4A4A4A", fontface = "bold", size = 3) +
+  # Annotate "Females" label
+  annotate("text", x = 2, y = 0.9, label = "Females", color = "#4A4A4A", fontface = "bold", size = 3)
 
 
 # Arrange both plots side by side
@@ -324,7 +330,7 @@ pyramid_plot + stacked_bar_plot
 This section explores how the population is spread across different age groups in each region. The stacked bar chart shows the breakdown across five age groups for each region. Additionally, a slope chart shows the proportion of the youth against the senior populations, providing a simple visual of how each region's population skews younger or older.
 
 ::: panel-tabset
-## The plot
+## Plot
 
 ```{r}
 #| echo: false
@@ -346,7 +352,8 @@ age_group_plot <- respop_data_clean %>%
                                "45-64" = "#FFD1A9",  
                                "65+" = "#E0B0FF")) +  
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 
 # Second plot (Slope Chart for Youth vs Senior Population)
 youth_senior_data <- respop_data_clean %>%
@@ -370,19 +377,19 @@ youth_senior_data <- respop_data_clean %>%
 
 # Slope chart plot
 slope_chart_plot <- ggplot(youth_senior_data, aes(x = Group, y = Population, group = Region)) +
-  geom_line(aes(color = Region), size = 1) +
+  geom_line(aes(color = Region), linewidth = 1) +
   geom_point(aes(color = Region), size = 3) +
   labs(title = "Youth vs Senior Population by Region",
-       subtitle = "Comparing age structure across regions using a slope chart",
        x = "", y = "Population") +
   theme_minimal() +
-  theme(legend.position = "right")
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5))
 
 # Combine both plots side by side
 age_group_plot + slope_chart_plot
 ```
 
-## The code
+## Code
 
 ```{r}
 #| eval: false
@@ -403,7 +410,8 @@ age_group_plot <- respop_data_clean %>%
                                "45-64" = "#FFD1A9",  
                                "65+" = "#E0B0FF")) +  
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 
 # Second plot (Slope Chart for Youth vs Senior Population)
 youth_senior_data <- respop_data_clean %>%
@@ -427,13 +435,13 @@ youth_senior_data <- respop_data_clean %>%
 
 # Slope chart plot
 slope_chart_plot <- ggplot(youth_senior_data, aes(x = Group, y = Population, group = Region)) +
-  geom_line(aes(color = Region), size = 1) +
+  geom_line(aes(color = Region), linewidth = 1) +
   geom_point(aes(color = Region), size = 3) +
   labs(title = "Youth vs Senior Population by Region",
-       subtitle = "Comparing age structure across regions using a slope chart",
        x = "", y = "Population") +
   theme_minimal() +
-  theme(legend.position = "right")
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5))
 
 # Combine both plots side by side
 age_group_plot + slope_chart_plot
@@ -463,12 +471,10 @@ To get a better understanding of the age distribution and variation across the r
 Together, these two visualisation provides a more comprehensive view of the population's age structure, addressing the regional differences.
 
 ::: panel-tabset
-## The plot
+## Plot
 
 ```{r}
 #| echo: false
-#| fig-width: 13
-#| fig-height: 8
 # Boxplot
 respop_expanded <- respop_data_clean %>%
   uncount(weights = Pop)
@@ -518,7 +524,7 @@ density_ridge_plot / boxplot_plot
 
 ```
 
-## The code
+## Code
 
 ```{r}
 #| eval: false
@@ -593,3 +599,5 @@ Across regions, ageing is evident as well. Notably, the Central region has the o
 
 -   [Singstat](https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data)
 -   [URA Master Plan 2025](https://eservice.ura.gov.sg/maps/?service=MP)
+
+
