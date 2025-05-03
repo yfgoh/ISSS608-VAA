@@ -131,7 +131,9 @@ respop_data_clean <- respop_data_clean %>%
 
 ## 4 Data visualisation
 
-### 4.1 Age-Sex Pyramid on a National Level
+### 4.1 National Distribution of Age and Sex Demographics
+
+To gain an overview of the national age and sex demographics, we use a population pyramid that highlights the age distribution by sex. Reference line were also added to draw attention to key data points, such as the median age and senior citizen threshold. A stacked bar chart further illustrates the sex distribution within each age group.
 
 ::: panel-tabset
 ## The plot
@@ -164,7 +166,11 @@ pyramid_plot <- ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
   geom_vline(xintercept = 42.8, linetype = "dashed", color = "black", size = 1) +
   annotate("text", x = 65, y = 0, label = "Age 65", color = "black", vjust = -0.5, hjust = -0.1) +
   annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1) +
-  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0"))+
+  theme(
+    plot.title = element_text(hjust = 0.5),  
+    legend.position = "bottom"  
+  )
 
 # Prepare data for 100% Stacked Bar Chart
 stacked_data <- respop_data_clean %>%
@@ -186,10 +192,14 @@ stacked_bar_plot <- ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion
     fill = "Sex"
   ) +
   theme_minimal() +
-  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0"))+
+  theme(
+    plot.title = element_text(hjust = 0.5),  
+    legend.position = "bottom"  
+  )
 
 # Arrange both plots side by side
-grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
+pyramid_plot + stacked_bar_plot
 ```
 
 ## The code
@@ -216,12 +226,16 @@ pyramid_plot <- ggplot(national_data, aes(x = Age, y = Total, fill = Sex)) +
     y = "Population",
     fill = "Sex"
   ) +
-  theme_minimal() + 
+  theme_minimal() +  
   geom_vline(xintercept = 65, linetype = "dashed", color = "black", size = 1) +
   geom_vline(xintercept = 42.8, linetype = "dashed", color = "black", size = 1) +
   annotate("text", x = 65, y = 0, label = "Age 65", color = "black", vjust = -0.5, hjust = -0.1) +
   annotate("text", x = 42.8, y = 0, label = "Median Age = 42.8", color = "black", vjust = -0.5, hjust = -0.1) +
-  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0"))+
+  theme(
+    plot.title = element_text(hjust = 0.5),  
+    legend.position = "bottom"  
+  )
 
 # Prepare data for 100% Stacked Bar Chart
 stacked_data <- respop_data_clean %>%
@@ -243,10 +257,14 @@ stacked_bar_plot <- ggplot(stacked_data, aes(x = as.integer(Age), y = Proportion
     fill = "Sex"
   ) +
   theme_minimal() +
-  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
+  scale_fill_manual(values = c("Males" = "#7A90C9", "Females" = "#F7A1A0"))+
+  theme(
+    plot.title = element_text(hjust = 0.5),  
+    legend.position = "bottom"  
+  )
 
 # Arrange both plots side by side
-grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
+pyramid_plot + stacked_bar_plot
 ```
 :::
 
@@ -257,7 +275,130 @@ grid.arrange(pyramid_plot, stacked_bar_plot, ncol = 2)
 -   In contrast, the narrowing base below the median age reflects persistently low birth rates and a shrinking younger population.
 -   The overall shape of the pyramid is symmetrical, indicating a relatively balanced distribution between males and females. However, the females slightly outnumber males in the older age, especially from the late 70s as seen in the stacked bar chart.
 
-### 4.2 Age group distribution across regions
+### 4.2 Age Distribution and Density Across Regions
+
+To get a better understanding of the age distribution and variation across the regions, we plot the following boxplot and density ride plot.
+
+-   The boxplot provides an overview of the age distribution within each region while highlighting the median, mean, interquartiles and range. This allows for easy comparison of the central tendency and spread of ages across regions.
+
+-   Meanwhile, the density ridge plot offers a more nuanced view by visualising the probability density of the age distribution. This reveals the relative density of different age groups across regions, emphasizing the shapes and variations in distribution.
+
+Together, these two visualisation provides a more comprehensive view of the population's age structure, uncovering regional differences.
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#| fig-width: 13
+#| fig-height: 8
+# Boxplot
+respop_expanded <- respop_data_clean %>%
+  uncount(weights = Pop)
+boxplot_plot <- ggplot(respop_expanded, aes(y = Region, x = Age, fill = Region)) + 
+  geom_boxplot() + 
+  labs(title = "Age Distribution Across Regions",
+       x = "Age",
+       y = "Region") +
+  stat_summary(geom = "point",       
+               fun = "mean",         
+               colour = "#9B2D20",       
+               size = 4)   +
+  scale_fill_manual(values = c(
+    "Central" = "#F9E29D",   
+    "East" = "#D6AEDD",      
+    "North" = "#F6B6A1",   
+    "North-East" = "#A9D8C9",
+    "West" = "#F7A1A0"      
+  )) +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 10),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        )
+
+# Density Ridge Plot
+density_ridge_plot <- respop_data_clean %>%
+  ggplot(aes(x = Age, y = Region, 
+             height = after_stat(density), 
+             fill = Region, weight = Pop)) +
+  geom_density_ridges(stat = "density", scale = 3, alpha = 0.7, color = "white") +
+  labs(title = "Weighted Age Density Distribution by Region",
+       x = "Age", y = "Region") +
+  scale_fill_manual(values = c(
+    "Central" = "#F9E29D",  
+    "East" = "#D6AEDD",    
+    "North" = "#F6B6A1",     
+    "North-East" = "#A9D8C9",
+    "West" = "#F7A1A0"       
+  )) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+
+density_ridge_plot / boxplot_plot
+
+```
+
+## The code
+
+```{r}
+#| eval: false
+# Boxplot
+respop_expanded <- respop_data_clean %>%
+  uncount(weights = Pop)
+boxplot_plot <- ggplot(respop_expanded, aes(y = Region, x = Age, fill = Region)) + 
+  geom_boxplot() + 
+  labs(title = "Age Distribution Across Regions",
+       x = "Age",
+       y = "Region") +
+  stat_summary(geom = "point",       
+               fun = "mean",         
+               colour = "#9B2D20",       
+               size = 4)   +
+  scale_fill_manual(values = c(
+    "Central" = "#F9E29D",   
+    "East" = "#D6AEDD",      
+    "North" = "#F6B6A1",   
+    "North-East" = "#A9D8C9",
+    "West" = "#F7A1A0"      
+  )) +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 10),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        )
+
+# Density Ridge Plot
+density_ridge_plot <- respop_data_clean %>%
+  ggplot(aes(x = Age, y = Region, 
+             height = after_stat(density), 
+             fill = Region, weight = Pop)) +
+  geom_density_ridges(stat = "density", scale = 3, alpha = 0.7, color = "white") +
+  labs(title = "Weighted Age Density Distribution by Region",
+       x = "Age", y = "Region") +
+  scale_fill_manual(values = c(
+    "Central" = "#F9E29D",  
+    "East" = "#D6AEDD",    
+    "North" = "#F6B6A1",     
+    "North-East" = "#A9D8C9",
+    "West" = "#F7A1A0"       
+  )) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+
+density_ridge_plot / boxplot_plot
+```
+:::
+
+**Insights**
+
+-   
+
+### 4.3 Age group distribution across regions
 
 ::: panel-tabset
 ## The plot
@@ -386,136 +527,7 @@ age_group_plot + slope_chart_plot
 
 -   Age groups of 0-14 and 15-24 remain relatively small across all regions, reflecting a broader national trend of declining birth rates.
 
-- The Central region stands out with a near-equal number of youths (aged 0–24) and seniors (65+). Despite signs of ageing, each region still has more youths than seniors, highlighting the continued presence of younger populations alongside an ageing demographic.
-
-### 4.3
-
-```{r}
-# Prepare the data: make sure Age is numeric and Region is a factor
-respop_data_clean <- respop_data_clean %>%
-  mutate(Age = as.numeric(Age),
-         Region = as.factor(Region))
-
-# Histogram with Population as weight
-ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Region)) +
-  geom_histogram(binwidth = 1, alpha = 0.6, position = "stack") +
-  facet_wrap(~ Region, scales = "free_y") +  # Faceting by Region
-  labs(title = "Age Distribution Across Regions in Singapore (2024)",
-       subtitle = "Histogram showing the population distribution by age and region",
-       x = "Age", y = "Population") +
-  theme_minimal() +
-  scale_fill_viridis_d(name = "Region") +
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(size = 9),
-        axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1))
-```
-
-```{r}
-# Ensure Age is numeric and Pop is used as the weight
-respop_data_clean <- respop_data_clean %>%
-  mutate(Age = as.numeric(Age))  # Ensure Age is numeric
-
-# Create weighted violin plot for Age distribution across regions
-ggplot(respop_data_clean, aes(x = Region, y = Age, weight = Pop, fill = Region)) +
-  geom_violin(alpha = 0.6) +  # Violin plot with transparency
-  labs(title = "Age Distribution Across Regions in Singapore (2024)",
-       subtitle = "Violin plot showing the age distribution by region, weighted by population",
-       x = "Region", y = "Age") +
-  theme_minimal() +
-  scale_fill_viridis_d(name = "Region") +  # Color by Region
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(size = 9),
-        axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1),
-        axis.title.x = element_text(vjust = 0.5),
-        strip.text = element_text(size = 10))  # Adjust facet label size
-
-```
-
-```{r}
-ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Sex)) +
-  geom_density(alpha = 0.6) +
-  facet_wrap(~ Region, ncol = 1, scales = "free_y") +
-  labs(
-    title = "Age Distribution by Region and Gender (2024)",
-    x = "Age",
-    y = "Density"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    strip.text = element_text(face = "bold"),
-    axis.text.y = element_blank(),
-    legend.title = element_blank()
-  ) +
-  scale_fill_manual(values = c("Males" = "steelblue", "Females" = "salmon"))
-```
-
-```{r}
-# Prepare the data: make sure Age is numeric and Region is a factor
-respop_data_clean <- respop_data_clean %>%
-  mutate(Age = as.numeric(Age),
-         Region = as.factor(Region))
-
-# Histogram with Population as weight, vertically stacked by Region
-ggplot(respop_data_clean, aes(x = Age, weight = Pop, fill = Region)) +
-  geom_histogram(binwidth = 1, alpha = 0.6, position = "stack") +
-  facet_wrap(~ Region, ncol = 1, scales = "free_y") +  # <-- ncol = 1 for vertical stacking
-  labs(title = "Age Distribution Across Regions in Singapore (2024)",
-       subtitle = "Histogram showing the population distribution by age and region",
-       x = "Age", y = "Population") +
-  theme_minimal() +
-  scale_fill_viridis_d(name = "Region") +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(size = 9),
-    axis.title.y = element_text(angle = 0, vjust = 0.5, hjust = 1)
-  )
-
-
-```
-
-
-
-```{r}
-respop_data_clean %>%
-  ggplot(aes(x = Age, y = Region, 
-             height = after_stat(density), 
-             fill = Region, weight = Pop)) +
-  geom_density_ridges(stat = "density", scale = 3, alpha = 0.7, color = "white") +
-  labs(title = "Weighted Age Density Distribution by Region",
-       x = "Age", y = "Region") +
-  theme_minimal() +
-  theme(legend.position = "none")
-```
-
-
-```{r}
-box_data <- respop_data_clean %>%
-  group_by(Region) %>%
-  summarise(
-    Min = wtd.quantile(Age, weights = Pop, probs = 0, na.rm = TRUE),
-    Q1 = wtd.quantile(Age, weights = Pop, probs = 0.25, na.rm = TRUE),
-    Median = wtd.quantile(Age, weights = Pop, probs = 0.5, na.rm = TRUE),
-    Mean = weighted.mean(Age, w = Pop, na.rm = TRUE),
-    Q3 = wtd.quantile(Age, weights = Pop, probs = 0.75, na.rm = TRUE),
-    Max = wtd.quantile(Age, weights = Pop, probs = 1, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-# Create the plot with weighted quantiles
-ggplot(box_data, aes(y = Region)) +  # Set y = Region for the horizontal plot
-  # Boxplot elements using geom_segment
-  geom_segment(aes(x = Min, xend = Max, y = Region, yend = Region), size = 1, color = "black") +  # Whiskers (Min, Max)
-  geom_segment(aes(x = Q1, xend = Q3, y = Region, yend = Region), size = 5, color = "#8593B5") +  # Box (Q1 to Q3)
-  geom_point(aes(x = Mean, y = Region), size = 4, color = "#8F6798") +  # Mean as dot
-  geom_segment(aes(x = Median, xend = Median, y = Region, yend = Region), size = 1.5, color = "red") +  # Median line inside box
-  labs(title = "Horizontal Weighted Boxplot of Age by Region",
-       x = "Age", y = "Region") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
-  coord_cartesian(xlim = c(0, 100))
-```
-
+-   The Central region stands out with a near-equal number of youths (aged 0–24) and seniors (65+). Despite signs of ageing, each region still has more youths than seniors, highlighting the continued presence of younger populations alongside an ageing demographic.
 
 ## 5 Reference
 
