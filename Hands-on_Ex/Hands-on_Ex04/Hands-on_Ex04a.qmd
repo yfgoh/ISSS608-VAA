@@ -352,7 +352,7 @@ ggplot(exam,
 :::
 
 ::: {.callout-note .callout-tip title="Things to learn from the code chunk above"}
-We remove the slab interval by setting .width = 0 and point_colour = NA. :::
+We remove the slab interval by setting .width = 0 and point_colour = NA.
 :::
 
 ### 4.2 Adding the boxplot with `geom_boxplot()`
