@@ -30,7 +30,7 @@ website:
         - text: "Take-home Exercise 1 (Phase 1)"
           href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
         - text: "Take-home Exercise 1 (Phase 2)"
-          href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01P2.html"
+          href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
     right:
       - href: index.qmd
         text: Home
@@ -60,7 +60,7 @@ website:
         - text: "Take-home Exercise 1 (Phase 1)"
           href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
         - text: "Take-home Exercise 1 (Phase 2)"
-          href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01P2.html"
+          href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
 format:
   html:
     theme: flatly
