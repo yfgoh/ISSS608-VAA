@@ -27,8 +27,10 @@ website:
     - text: "In-class Exercises"
     - text: "Take-home Exercises"
       menu: 
-        - text: "Take-home Exercise 1"
+        - text: "Take-home Exercise 1 (Phase 1)"
           href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
+        - text: "Take-home Exercise 1 (Phase 2)"
+          href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01P2.html"
     right:
       - href: index.qmd
         text: Home
@@ -55,8 +57,10 @@ website:
         - text: "Hands-on Exercise 4d"
           href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html"
         - section: "Take-home Exercises"
-        - text: "Take-home Exercise 1"
+        - text: "Take-home Exercise 1 (Phase 1)"
           href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
+        - text: "Take-home Exercise 1 (Phase 2)"
+          href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01P2.html"
 format:
   html:
     theme: flatly
