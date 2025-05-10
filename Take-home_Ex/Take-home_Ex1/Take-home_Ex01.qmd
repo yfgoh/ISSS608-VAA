@@ -3,7 +3,7 @@ title: "Take-home Exercise 1"
 author: "Yi Fang"
 date: "April 30, 2025"
 date-modified: "last-modified"
-format: html
+format: docx
 editor: visual
 freeze: true
 warning: false
@@ -599,5 +599,3 @@ Across regions, ageing is evident as well. Notably, the Central region has the o
 
 -   [Singstat](https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data)
 -   [URA Master Plan 2025](https://eservice.ura.gov.sg/maps/?service=MP)
-
-
