@@ -104,7 +104,7 @@ Why it can be confusing:
 
 -   Scientific notation undermines readability: Displaying population values in scientific notations will require readers to engage in additional cognitive effort and may be difficult for non-technical readers. This introduces friction into the reading experience. On fast-scrolling digital platforms, accessible by general public of all ages and abilities, reducing interpretation barriers is critical.
 
--   Title and labels lack specificity: The title does not specify the scope of population (whether non-residents are included). Similarly, the x-axis label "Total Population" which is vague in a demographic context where definitions matter.
+-   Title and labels lack specificity: The title does not specify the scope of population (whether non-residents are included). Similarly, the x-axis label "Total Population" which is vague in a demographic context where definitions matter. To enhance the clarity, "Total Population" can be defined as "Resident Population" and source can be added to the data visualisation for readers to have further reference on the definition of "Resident Population" and the year of reference.
 
 [**Aesthetic**]{.underline}
 
@@ -204,7 +204,7 @@ ggplot(top_pa, aes(x = PA, y = Total_Pop, fill = Fill)) +
 ```
 :::
 
-## 4 References
+# 4 References
 
 -   [Original work by course-mate](https://isss608vaarajesh01.netlify.app/takehomeexercises/take_homeexercise1/take_homeexercise1)
 
