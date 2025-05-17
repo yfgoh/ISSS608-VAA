@@ -4,6 +4,11 @@ project:
 website:
   title: "<img src='/images/shibainu.png' alt='ISSS608' style='height: 48px; width: 48px;'>"
   back-to-top-navigation: true
+  announcement: 
+    dismissable: true
+    content: "🚀 [In-class Exercise 5](In-class_Ex/In-class_Ex05/MC1/In-class_Ex05_MC1.html) is now available!"
+    type: light
+    position: below-navbar
   navbar:
     left:
     - text: "Hands-on Exercises"
