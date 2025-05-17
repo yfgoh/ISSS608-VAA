@@ -39,6 +39,7 @@ edges_tbl <- as_tibble(kg$links)
 ```
 
 ## Initial EDA
+
 ```{r}
 ggplot(data = edges_tbl,
        aes(y = `Edge Type`)) +
@@ -53,8 +54,8 @@ ggplot(data = nodes_tbl,
 
 ## Creating Knowledge Graph
 
-This is 
 ### Step 1: Mapping node id to row index
+
 ```{r}
 id_map <- tibble(id = nodes_tbl$id,
                  index = seq_len(
@@ -64,6 +65,7 @@ id_map <- tibble(id = nodes_tbl$id,
 This ensures each id from node list is mapped to the correct number.
 
 ### Step 2: Map source and target IDs to row indices
+
 ```{r}
 edges_tbl <- edges_tbl %>%
   left_join(id_map, by = c("source" = "id")) %>%
@@ -71,18 +73,22 @@ edges_tbl <- edges_tbl %>%
   left_join(id_map, by = c("target" = "id")) %>%
   rename(to = index)
 ```
+
 The number of observations in edges_tbl should be the same as before running this code chunk.
 
 Before doing leftjoin, there are only 4 variables. AFter doing the leftjoin, there is two additional variables.
 
 ### Step 3: Filter out any unmatched
+
 ```{r}
 edges_tbl <- edges_tbl %>%
   filter(!is.na(from),!is.na(to))
 ```
+
 This will get rid of any missing values.
 
 ### Step 4: Creating the graph
+
 Lastly, `tbl_graph()` is used to create tidygraph's graph object by using the code chunk below.
 
 ```{r}
@@ -90,14 +96,17 @@ graph <- tbl_graph(nodes = nodes_tbl,
                    edges = edges_tbl,
                    directed = kg$directed)
 ```
+
 Directed will be plugged from kg table's directed column.
 
 ## Visualising the knowledge graph
+
 ```{r}
 set.seed(1234)
 ```
-This is to ensure reproducibility. 
-### Visualising the Whole Graph
+
+This is to ensure reproducibility. \### Visualising the Whole Graph
+
 ```{r}
 #| eval: false
 
@@ -114,9 +123,11 @@ ggraph(graph, layout = "fr") +
 ```
 
 ### Visualising the sub-graph
+
 In this section, we are interested to create a sub-graph base on *MemberOf* vaue in *Edge Type* column of the *edges* data frame.
 
 #### Step 1: Filter edges to only "MemberOf"
+
 ```{r}
 graph_memberof <- graph %>%
   activate(edges) %>%                     # Focus on edges table
@@ -124,6 +135,7 @@ graph_memberof <- graph %>%
 ```
 
 #### Step 2: Extract only connected nodes (i.e., used in these edges)
+
 ```{r}
 used_nodes_indices <- graph_memberof %>%
   activate(edges) %>%
@@ -132,9 +144,11 @@ used_nodes_indices <- graph_memberof %>%
   unlist() %>%                  # beCause it is a graph model, not a list
   unique()
 ```
+
 This is to eliminate orphan nodes.
 
 #### Step 3: Keep only those nodes
+
 ```{r}
 graph_memberof <- graph_memberof %>%
   activate(nodes) %>% 
@@ -144,6 +158,7 @@ graph_memberof <- graph_memberof %>%
 ```
 
 #### Plot the sub-graph
+
 ```{r}
 ggraph(graph_memberof,
        layout = "fr") + 

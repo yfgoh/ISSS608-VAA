@@ -330,6 +330,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#initial-eda" id="toc-initial-eda" class="nav-link" data-scroll-target="#initial-eda">Initial EDA</a></li>
   <li><a href="#creating-knowledge-graph" id="toc-creating-knowledge-graph" class="nav-link" data-scroll-target="#creating-knowledge-graph">Creating Knowledge Graph</a>
   <ul class="collapse">
+  <li><a href="#step-1-mapping-node-id-to-row-index" id="toc-step-1-mapping-node-id-to-row-index" class="nav-link" data-scroll-target="#step-1-mapping-node-id-to-row-index">Step 1: Mapping node id to row index</a></li>
   <li><a href="#step-2-map-source-and-target-ids-to-row-indices" id="toc-step-2-map-source-and-target-ids-to-row-indices" class="nav-link" data-scroll-target="#step-2-map-source-and-target-ids-to-row-indices">Step 2: Map source and target IDs to row indices</a></li>
   <li><a href="#step-3-filter-out-any-unmatched" id="toc-step-3-filter-out-any-unmatched" class="nav-link" data-scroll-target="#step-3-filter-out-any-unmatched">Step 3: Filter out any unmatched</a></li>
   <li><a href="#step-4-creating-the-graph" id="toc-step-4-creating-the-graph" class="nav-link" data-scroll-target="#step-4-creating-the-graph">Step 4: Creating the graph</a></li>
@@ -445,13 +446,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="creating-knowledge-graph" class="level2">
 <h2 class="anchored" data-anchor-id="creating-knowledge-graph">Creating Knowledge Graph</h2>
-<p>This is ### Step 1: Mapping node id to row index</p>
+<section id="step-1-mapping-node-id-to-row-index" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-mapping-node-id-to-row-index">Step 1: Mapping node id to row index</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>id_map <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> nodes_tbl<span class="sc">$</span>id,</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">index =</span> <span class="fu">seq_len</span>(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">nrow</span>(nodes_tbl)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This ensures each id from node list is mapped to the correct number.</p>
+</section>
 <section id="step-2-map-source-and-target-ids-to-row-indices" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-map-source-and-target-ids-to-row-indices">Step 2: Map source and target IDs to row indices</h3>
 <div class="cell">
