@@ -1,0 +1,34 @@
+---
+title: "Take-home_Ex02"
+format: html
+---
+
+```{r}
+pacman::p_load(jsonlite, tidyverse, SmartEDA, tidygraph, ggraph
+)
+```
+
+```{r}
+data <- fromJSON("MC1/data/MC1_graph.json")
+glimpse(data)
+```
+
+```{r}
+mc1_nodes_raw <- as_tibble(data$nodes)
+glimpse(mc1_nodes_raw)
+```
+
+```{r}
+mc1_links_raw <- as_tibble(data$links)
+glimpse(mc1_links_raw)
+```
+
+```{r}
+mc1_nodes_lite <- mc1_nodes_raw %>% select(id, `Node Type`)
+(mc1_nodes_lite$`Node Type`) %>% unique()
+```
+
+```{r}
+mc1_links_lite <- mc1_links_raw %>% select(`Edge Type`, source, target, key)
+(mc1_links_lite$`Edge Type`) %>% unique()
+```
