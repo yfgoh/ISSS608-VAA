@@ -45,42 +45,7 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-  sidebar: 
-    collapse: true
-    collapse-level: 1
-    style: "docked"
-    background: "#F6F5EB"
-    contents:
-        - section: "Hands-on Exercises"
-          contents:
-            - text: "Hands-on Exercise 1"
-              href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
-            - text: "Hands-on Exercise 2"
-              href: "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html"
-            - text: "Hands-on Exercise 3a"
-              href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html"
-            - text: "Hands-on Exercise 3b"
-              href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html"
-            - text: "Hands-on Exercise 4a"
-              href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html"
-            - text: "Hands-on Exercise 4b"
-              href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html"
-            - text: "Hands-on Exercise 4c"
-              href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html"
-            - text: "Hands-on Exercise 4d"
-              href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html"
-            - text: "Hands-on Exercise 5"
-              href: "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html"
-        - section: "In-class Exercises"
-          contents:
-            - text: "In-class Exercise 5"
-              href: "In-class_Ex/In-class_Ex05/MC1/In-class_Ex05_MC1.html"
-        - section: "Take-home Exercises"
-          contents:
-            - text: "Take-home Exercise 1 (Phase 1)"
-              href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01.html"
-            - text: "Take-home Exercise 1 (Phase 2)"
-              href: "Take-home_Ex/Take-home_Ex1/Take-home_Ex01P2.html"
+  
 format:
   html:
     theme: flatly

@@ -5,3 +5,18 @@ title: "ISSS608 — Visual Analytics and Applications"
 ![](images/IMG_0616.PNG){fig-align="center" width="470"}
 
 Welcome to my website for **ISSS608: Visual Analytics and Applications**. Here, you'll find a collection of my learnings and coursework from the course, reflecting the skills and knowledge I've gained throughout this journey.
+
+---
+listing:
+  type: table
+  contents:
+    - Hands-on_Ex
+    - In-class_Ex
+    - Take-home_Ex\Take-home_Ex1
+  fields: [date, title]
+  sort: "date desc"
+  categories: true
+  sort-ui: [title, date]
+  filter-ui: [title, date]
+  table-hover: true
+---
