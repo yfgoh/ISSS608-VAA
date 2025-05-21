@@ -7,7 +7,12 @@ editor: visual
 freeze: true
 warning: false
 format: html
-categories: ["Hands-on Exercise"]
+categories: 
+  - ["Hands-on Exercise"]
+  - ["Calendar Heatmap"]
+  - ["Cycle Plot"]
+  - ["Slopegraph"]
+  - ["Horizon Chart"]
 ---
 
 # Visualising and Analysing Time-oriented Data

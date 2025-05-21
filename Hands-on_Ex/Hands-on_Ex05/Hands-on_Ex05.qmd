@@ -7,7 +7,9 @@ editor: visual
 freeze: true
 warning: false
 format: html
-categories: ["Hands-on Exercise"]
+categories: 
+  - ["Hands-on Exercise"]
+  - ["Network"]
 ---
 
 # Modelling, Visualising and Analysing Network Data with R
@@ -639,7 +641,10 @@ GAStech_edges_aggregated <- GAStech_edges %>%
 
 The code chunk below will be used to plot an interactive network graph by using the data prepared.
 
-`{visNetwork(GAStech_nodes,}            GAStech_edges_aggregated)`
+```{r}
+visNetwork(GAStech_nodes, 
+           GAStech_edges_aggregated)
+```
 
 ### 8.3 Working with layout
 

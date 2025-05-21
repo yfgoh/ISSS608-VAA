@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotting-ridgeline-graph-ggridges-method" id="toc-plotting-ridgeline-graph-ggridges-method" class="nav-link" data-scroll-target="#plotting-ridgeline-graph-ggridges-method">3.1 Plotting Ridgeline Graph: ggridges method</a></li>
   <li><a href="#varying-fill-colors-along-the-x-axis" id="toc-varying-fill-colors-along-the-x-axis" class="nav-link" data-scroll-target="#varying-fill-colors-along-the-x-axis">3.2 Varying fill colors along the x-axis</a></li>
   <li><a href="#mapping-the-probabilities-directly-onto-color" id="toc-mapping-the-probabilities-directly-onto-color" class="nav-link" data-scroll-target="#mapping-the-probabilities-directly-onto-color">3.3 Mapping the probabilities directly onto color</a></li>
-  <li><a href="#ridgeline-plots-with-quartile-lines" id="toc-ridgeline-plots-with-quartile-lines" class="nav-link" data-scroll-target="#ridgeline-plots-with-quartile-lines">3.4 Ridgeline plots with quartile lines</a></li>
+  <li><a href="#ridgeline-plots-with-quantile-lines" id="toc-ridgeline-plots-with-quantile-lines" class="nav-link" data-scroll-target="#ridgeline-plots-with-quantile-lines">3.4 Ridgeline plots with quantile lines</a></li>
   </ul></li>
   <li><a href="#visualising-distribution-using-raincloud-plot" id="toc-visualising-distribution-using-raincloud-plot" class="nav-link" data-scroll-target="#visualising-distribution-using-raincloud-plot">4 Visualising Distribution using Raincloud Plot</a>
   <ul class="collapse">
@@ -261,6 +261,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title">Hands-on Exercise 4a</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Hands-on Exercise</div>
+    <div class="quarto-category">Ridgeline</div>
+    <div class="quarto-category">Half Eye Graph</div>
+    <div class="quarto-category">Boxplot</div>
+    <div class="quarto-category">Dot Plot</div>
+    <div class="quarto-category">Raincloud Plot</div>
   </div>
   </div>
 
@@ -500,9 +505,9 @@ Important
 </div>
 </div>
 </section>
-<section id="ridgeline-plots-with-quartile-lines" class="level3">
-<h3 class="anchored" data-anchor-id="ridgeline-plots-with-quartile-lines">3.4 Ridgeline plots with quartile lines</h3>
-<p>The ridgeline plot can be colored based on quartile by using <code>geom_density_ridges_gradient()</code>. This is calculated using&nbsp;<code>stat(quantile)</code>&nbsp;aesthetic as shown in the figure below.</p>
+<section id="ridgeline-plots-with-quantile-lines" class="level3">
+<h3 class="anchored" data-anchor-id="ridgeline-plots-with-quantile-lines">3.4 Ridgeline plots with quantile lines</h3>
+<p>The ridgeline plot can be colored based on quantile by using <code>geom_density_ridges_gradient()</code>. This is calculated using&nbsp;<code>stat(quantile)</code>&nbsp;aesthetic as shown in the figure below.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">
@@ -529,13 +534,13 @@ Important
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">calc_ecdf =</span> <span class="cn">TRUE</span>, </span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">quantiles =</span> <span class="dv">4</span>,</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">quantile_lines =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">"Quartiles"</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">"Quantiles"</span>) <span class="sc">+</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ridges</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
-<p>Instead of using number to define the quartiles, we can also specify quartiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in the figure below.</p>
+<p>Instead of using number to define the quantiles, we can also specify quantiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in the figure below.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">

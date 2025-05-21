@@ -7,7 +7,13 @@ format: html
 editor: visual
 freeze: true
 warning: false
-categories: ["Hands-on Exercise"]
+categories: 
+  - ["Hands-on Exercise"]
+  - ["Ridgeline"]
+  - ["Half Eye Graph"]
+  - ["Boxplot"]
+  - ["Dot Plot"]
+  - ["Raincloud Plot"]
 ---
 
 # Visualising Distribution
@@ -222,9 +228,9 @@ ggplot(exam,
 It is important include the argument `calc_ecdf = TRUE` in `stat_density_ridges()`.
 :::
 
-### 3.4 Ridgeline plots with quartile lines
+### 3.4 Ridgeline plots with quantile lines
 
-The ridgeline plot can be colored based on quartile by using `geom_density_ridges_gradient()`. This is calculated using `stat(quantile)` aesthetic as shown in the figure below.
+The ridgeline plot can be colored based on quantile by using `geom_density_ridges_gradient()`. This is calculated using `stat(quantile)` aesthetic as shown in the figure below.
 
 ::: panel-tabset
 ## Plot
@@ -241,7 +247,7 @@ ggplot(exam,
     calc_ecdf = TRUE, 
     quantiles = 4,
     quantile_lines = TRUE) +
-  scale_fill_viridis_d(name = "Quartiles") +
+  scale_fill_viridis_d(name = "Quantiles") +
   theme_ridges()
 ```
 
@@ -259,12 +265,12 @@ ggplot(exam,
     calc_ecdf = TRUE, 
     quantiles = 4,
     quantile_lines = TRUE) +
-  scale_fill_viridis_d(name = "Quartiles") +
+  scale_fill_viridis_d(name = "Quantiles") +
   theme_ridges()
 ```
 :::
 
-Instead of using number to define the quartiles, we can also specify quartiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in the figure below.
+Instead of using number to define the quantiles, we can also specify quantiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in the figure below.
 
 ::: panel-tabset
 ## Plot
