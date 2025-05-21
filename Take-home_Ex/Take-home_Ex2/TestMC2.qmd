@@ -1,0 +1,301 @@
+---
+title: "TestMC2"
+format: html
+---
+
+# Overview
+
+## Objective
+
+This take-home exercise will be covering VAST Challenge 2025 [Mini-Challenge 2](https://vast-challenge.github.io/2025/MC2.html).
+
+## Background
+
+Oceanus has enjoyed a relatively simple, fishing-based economy for decades. However, in recent times tourism has greatly expanded and resulted in significant changes. The local government set up an oversight board - Commission on Overseeing the Economic Future of Oceanus (COOTEFOO) - to monitor the current economy and advise how to prepare for the future. It is an appointed board that has no direct power on rules/spending BUT has a lot of clout in the civil service and gets government money to do its job…ostensibly in an unbiased way.
+
+Recently COOTEFOO was hit by a sequence of scandals that roughly break down into two camps:
+
+-   Fishing is Living and Heritage (FILAH) accuses the board of being biased toward the new tourism economy and inappropriately attending to the potential in those ventures, ignoring the historical powerhouse of the economy: Getting lots of fish out of the water and off to hungry people. They accuse some COOTEFOO members of bias against fishing.
+
+-   Tourism Raises OceanUs Together (TROUT) accuses the board of being biased toward an entrenched interest and constantly “appeasing” the fishing industry, ignoring the new/growing avenues for economic stability. They accuse some members of ignoring the brave-new-world and living in the past.
+
+A journalist, Edwina Darling Moray (E.D. to her friends), at the Haacklee Herald is working on a story about government accountability. She has acquired the datasets that TROUT and FILIAH are working from, which includes meeting minutes and travel records of COOTEFOO members. She also has acquired additional records that TROUT and FILAH did not. Moray has employed a staff programmer to massage the data into a consistent format for analysis – a knowledge graph. You are picking up the work from that programmer to design visualizations to support Moray’s understanding of what is going on. Moray is not a knowledge graph expert, but she understands the workings of Oceanus well. She wants you to design a visual interface to explore the accusations in context and discern which are founded and which are spurious.
+
+## Task and Questions
+
+1.  Based on the datasets that TROUT & FILAH have provided, use visual analytics to determine if each group’s accusations are supported by their own record set. In other words, develop a visualization to highlight bias (if present) in TROUT & FILAHS datasets. Is there evidence of bias in the COOTEFOO member actions in either dataset?
+
+2.  As a journalist, Ms. Moray would like a more complete picture of the COOTEFOO’s actions and activities. She has arranged to combine the data provided by TROUT and FILAH into a single knowledge graph along with additional records. Design visual analytics approaches for this combined knowledge graph to see how members of COOTEFOO spend their time. Is the committee as a whole biased? Provide visual evidence for your conclusions.
+
+3.  The TROUT and FILAH datasets are incomplete. Use your visualizations to compare and contrast conclusions drawn from the TROUT and FILAH datasets separately with behaviors in the whole dataset. Are the accusations of TROUT strengthened, weakened or unchanged when taken in context of the whole dataset?
+
+4.  Design a visualization that allows Ms. Moray to pick a person and highlight the differences in that person’s behavior as illustrated through the different datasets. Focus on the contrast in the story each dataset tells.
+
+    1.  Pick at least one COOTEFOO member accused by TROUT. Illustrate how your understanding of their activities changed when using the more complete dataset.
+
+    2.  What are the key pieces of evidence missing from the original TROUT data that most influenced the change in judgement.
+
+    3.  Whose behaviors are most impacted by sampling bias when looking at the FILAH dataset in context of the other data?
+
+    4.  Illustrate the bias of the FILAH data in the context of the whole dataset.
+
+## Getting started
+
+For the purpose of this exercise, five R packages will be used. They are tidyverse, jsonlite, tidygraph, ggraph and SmartEDA.
+
+\
+In the code chunk below, `p_load()` of **pacman** package is used to load the R packages into R environemnt.
+
+```{r}
+pacman::p_load(tidyverse, jsonlite,
+               tidygraph, ggraph,
+               SmartEDA)
+```
+
+## Importing Knowledge Graph Data
+
+For the purpose of this exercise, *FILAH.json* file will be used.
+
+In the code chunk below, `fromJSON()` of **jsonlite** package is used to import *FILAH.json* file into R and save the output object
+
+```{r}
+filah <- fromJSON("MC2/data/FILAH.json")
+trout <- fromJSON("MC2/data/TROUT.json")
+journalist <- fromJSON("MC2/data/journalist.json")
+road_map <- fromJSON("MC2/data/road_map.json")
+```
+
+### Inspecting knowledge graph structure
+
+Before preparing the data, it is always a good practice to examine the structure of *filah* knowledge graph.
+
+In the code chunk below `glimpse()` is used to reveal the structure of *filah* knowledge graph.
+
+```{r}
+glimpse(filah)
+```
+
+::: callout-warning
+Notice that *Industry* field is in list data type. In general, this data type is not acceptable by `tbl_graph()` of **tidygraph**. In order to avoid error arise when building tidygraph object, it is wiser to exclude this field from the edges data table. However, it might be still useful in subsequent analysis.
+:::
+
+## Extracting the edges and nodes tables
+
+Next, `as_tibble()` of **tibble** package package is used to extract the nodes and links tibble data frames from *filah* tibble dataframe into two separate tibble dataframes called *filah_nodes* and *filah_edges* respectively.
+
+```{r}
+filah_nodes <- as_tibble(filah$nodes)
+filah_edges <- as_tibble(filah$links)
+```
+
+### Initial EDA
+
+In the code chunk below, `ExpCatViz()` of SmartEDA package is used to reveal the frequency distribution of all categorical fields in *filah_nodes* tibble dataframe.
+
+```{r}
+ExpCatViz(data=filah_nodes,
+          col="lightblue")
+```
+
+On the other hands, code chunk below uses `ExpCATViz()` of SmartEDA package to reveal the frequency distribution of all categorical fields in *filah_edges* tibble dataframe.
+
+```{r}
+ExpCatViz(data=filah_edges,
+          col="lightblue")
+```
+
+```{r}
+ExpNumViz(filah_nodes)
+```
+
+```{r}
+ExpNumViz(filah_edges)
+```
+
+## Data Cleaning and Wrangling
+
+### Cleaning and wrangling nodes
+
+```{r}
+filah_nodes_cleaned <- filah_nodes %>%
+  mutate(id = as.character(id)) %>%
+  filter(!is.na(id)) %>%
+  distinct(id, .keep_all = TRUE) %>%
+  select(id, type, label)   
+```
+
+### Cleaning and wrangling edges
+
+```{r}
+filah_edges_cleaned <- filah_edges %>%
+  rename(from = source, to = target) %>%
+  mutate(across(c(from, to), as.character)) %>%
+  filter(from %in% filah_nodes_cleaned$id, to %in% filah_nodes_cleaned$id)
+
+# Remove problematic columns from edge table for graph building
+filah_edges_min <- filah_edges_cleaned %>%
+  select(from, to, role)  # Only basic fields needed for graph structure
+```
+
+### Building the tidygraph object
+
+```{r}
+filah_graph <- tbl_graph(
+  nodes = filah_nodes_cleaned, 
+  edges = filah_edges_min, 
+  directed = TRUE)
+```
+
+::: callout-note
+Since the similar steps will be used to clean and wrangle `TROUT.json` and `journalist.json`, you might want to consider converting the above code chunks into R function(s).
+:::
+
+### Converting the above code chunks into R functions
+
+#### Cleaning and wrangling nodes
+
+```{r}
+clean_nodes <- function(nodes_df) {
+  nodes_df %>%
+    mutate(id = as.character(id)) %>%
+    filter(!is.na(id)) %>%
+    distinct(id, .keep_all = TRUE) %>%
+    select(id, type, label)
+}
+
+```
+
+#### Cleaning and wrangling edges
+
+```{r}
+clean_edges <- function(edges_df, cleaned_nodes_df) {
+  edges_df %>%
+    rename(from = source, to = target) %>%
+    mutate(across(c(from, to), as.character)) %>%
+    filter(from %in% cleaned_nodes_df$id, to %in% cleaned_nodes_df$id)
+}
+
+```
+
+#### Remove problematic columns from edge table for graph building
+
+```{r}
+minimize_edges <- function(cleaned_edges_df) {
+  cleaned_edges_df %>%
+    select(from, to, role)
+}
+
+```
+
+#### Building the tidygraph object
+
+```{r}
+build_graph <- function(nodes_df, edges_df) {
+  tbl_graph(
+    nodes = nodes_df,
+    edges = edges_df,
+    directed = TRUE
+  )
+}
+
+```
+
+#### Wrapper function to process everything
+
+```{r}
+process_graph_data <- function(nodes_df, edges_df) {
+  nodes_cleaned <- clean_nodes(nodes_df)
+  edges_cleaned <- clean_edges(edges_df, nodes_cleaned)
+  edges_min <- minimize_edges(edges_cleaned)
+  build_graph(nodes_cleaned, edges_min)
+}
+
+```
+
+## Visualising the knowledge graph
+
+In this section, we will use ggraph’s functions to visualise and analyse the graph object.
+
+### Visualising the whole graph
+
+Several of the ggraph layouts involve randomisation. In order to ensure reproducibility, it is necessary to set the seed value before plotting by using the code chunk below.
+
+```{r}
+set.seed(1234)
+```
+
+In the code chunk below, ggraph functions are used to create the whole graph.
+
+```{r}
+ggraph(filah_graph, 
+       layout = "fr") +
+  geom_edge_link(alpha = 0.3, 
+                 colour = "gray") +
+  geom_node_point(aes(color = `type`), 
+                  size = 4) +
+  geom_node_text(aes(label = type), 
+                 repel = TRUE, 
+                 size = 2.5) +
+  theme_void()
+```
+
+## Importing Knowledge Graph - TROUT
+
+### Inspecting knowledge graph structure
+
+```{r}
+glimpse(trout)
+```
+
+## Extracting the edges and nodes tables
+
+```{r}
+trout_nodes <- as_tibble(trout$nodes)
+trout_edges <- as_tibble(trout$links)
+```
+
+### Initial EDA
+
+```{r}
+ExpCatViz(data=trout_nodes,
+          col="lightblue")
+```
+
+```{r}
+ExpCatViz(data=trout_edges,
+          col="lightblue")
+```
+
+```{r}
+ExpNumViz(trout_nodes)
+```
+
+```{r}
+ExpNumViz(trout_edges)
+```
+
+## Data cleaning and Wrangling
+
+```{r}
+trout_graph <- process_graph_data(trout_nodes, trout_edges)
+```
+
+### Visualising the whole graph - TROUT
+
+```{r}
+set.seed(1234)
+```
+
+```{r}
+ggraph(trout_graph, 
+       layout = "fr") +
+  geom_edge_link(alpha = 0.3, 
+                 colour = "gray") +
+  geom_node_point(aes(color = `type`), 
+                  size = 4) +
+  geom_node_text(aes(label = type), 
+                 repel = TRUE, 
+                 size = 2.5) +
+  theme_void()
+```
+

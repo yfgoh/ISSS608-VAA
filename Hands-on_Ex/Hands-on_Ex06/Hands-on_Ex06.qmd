@@ -341,7 +341,7 @@ rice %>%
   mutate(Year = factor(Year)) %>%
   filter(Year %in% c(1961, 1980)) %>%
   newggslopegraph(Year, Yield, Country,
-                Title = "Rice Yield of Top 11 Asian Counties",
+                Title = "Rice Yield of Top 11 Asian Countries",
                 SubTitle = "1961-1980",
                 Caption = "Prepared by: Dr. Kam Tin Seong")
 ```

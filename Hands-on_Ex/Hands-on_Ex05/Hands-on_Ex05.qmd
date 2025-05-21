@@ -7,6 +7,7 @@ editor: visual
 freeze: true
 warning: false
 format: html
+category: "Hands-on Exercise"
 ---
 
 # Modelling, Visualising and Analysing Network Data with R
@@ -46,13 +47,13 @@ The data sets used in this hands-on exercise is from an oil exploration and extr
 
 ### 3.1 The edges data
 
--   *GAStech-email_edges.csv* which consists of two weeks of 9063 emails correspondances between 55 employees.
+-   *GAStech-email_edges.csv* which consists of two weeks of 9063 emails correspondances between 54 employees.
 
 ![](images/clipboard-2217976830.png)
 
 ### 3.2 The nodes data
 
--   *GAStech_email_nodes.csv* which consist of the names, department and title of the 55 employees.
+-   *GAStech_email_nodes.csv* which consist of the names, department and title of the 54 employees.
 
 ![](images/clipboard-2166758786.png)
 
@@ -211,7 +212,7 @@ GAStech_graph
 
 ### 4.5 Reviewing the output tidygraph's graph object
 
--   The output above reveals that *GAStech_graph* is a tbl_graph object with 54 nodes and 4541 edges.
+-   The output above reveals that *GAStech_graph* is a tbl_graph object with 54 nodes and 1372 edges.
 
 -   The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.
 
@@ -638,9 +639,7 @@ GAStech_edges_aggregated <- GAStech_edges %>%
 
 The code chunk below will be used to plot an interactive network graph by using the data prepared.
 
-```{visNetwork(GAStech_nodes,}
-           GAStech_edges_aggregated)
-```
+`{visNetwork(GAStech_nodes,}            GAStech_edges_aggregated)`
 
 ### 8.3 Working with layout
 
@@ -708,7 +707,7 @@ visNetwork(GAStech_nodes,
 
 Visit [Option](http://datastorm-open.github.io/visNetwork/edges.html) to find out more about visEdges’s argument.
 
-### 8.6 Interactivity 
+### 8.6 Interactivity
 
 In the code chunk below, *visOptions()* is used to incorporate interactivity features in the data visualisation.
 

@@ -3,7 +3,6 @@ title: "TestMC1"
 format: html
 ---
 
-
 ## 1.2 Tasks and Questions
 
 1.  Design and develop visualizations and visual analytic tools that will allow Silas to explore and understand the profile of Sailor Shift’s career
@@ -67,7 +66,7 @@ pacman::p_load(jsonlite, tidyverse, ggtext,
 ```
 :::
 
-## [1-1:]1.6 Importing Data
+## \[1-1:\]1.6 Importing Data
 
 For the purpose of this exercise, a data file called *MC1_graph* will be used. The code chunk below imports *respopagesex2024.csv* into R environment by using *read_csv()* function of *readr* package (under *tidyverse*).
 
@@ -202,6 +201,7 @@ ggplot(data = mc1_edges_clean,
 ```
 
 ## Creating the global knowledge graph
+
 `tbl_graph()` is used to create tidygraph's graph object by using the code chunk below
 
 ```{r}
@@ -263,12 +263,6 @@ dep_score <- sapply(node_names, function(n) {
 # Attach to tbl_graph
 sub_music <- sub_music %>%
   mutate(sailor_dependency = dep_score)
-```
-```{r}
-pacman::p_load(extrafont)
-font_import()
-loadfonts(device = "win")
-
 ```
 
 ```{r}
@@ -596,4 +590,98 @@ g <- sub_music %>%
   scale_shape_discrete(name = "Node Type")
 g <- g + theme_minimal(base_family = "sans")
 girafe(ggobj = g, width_svg = 11, height_svg = 8)
+```
+
+# Test
+
+```{r}
+library(tidygraph)
+library(dplyr)
+library(ggraph)
+
+
+# Step 1: Find songs created by Sailor Shift
+sailor_id <- which(V(music)$name == "Sailor Shift")
+
+sailor_songs <- music %>%
+  activate(edges) %>%
+  filter(from == sailor_id & `Edge Type` %in% c("PerformerOf", "ComposerOf", "LyricistOf")) %>%
+  pull(to)
+
+# Step 2: Find songs Sailor’s songs were influenced by
+influenced_by_edges <- music %>%
+  activate(edges) %>%
+  filter(from %in% sailor_songs & `Edge Type` %in% c("InStyleOf", "CoverOf", "DirectlySamples", "InterpolatesFrom", "LyricalReferenceTo")) %>%
+  as_tibble()
+
+influencing_songs <- influenced_by_edges$to
+
+# Step 3: Find creators of those influencing songs
+influencers <- music %>%
+  activate(edges) %>%
+  filter(to %in% influencing_songs & `Edge Type` %in% c("PerformerOf", "ComposerOf", "LyricistOf")) %>%
+  pull(from) %>%
+  unique()
+
+# Step 4: Subgraph including all relevant nodes
+influence_node_ids <- unique(c(sailor_id, sailor_songs, influencing_songs, influencers))
+
+# ✅ Use activate(nodes) + filter() to select relevant nodes
+influence_subgraph <- music %>%
+  activate(nodes) %>%
+  filter(row_number() %in% influence_node_ids)
+
+```
+
+```{r}
+influence_subgraph <- influence_subgraph %>%
+  mutate(
+    influence_level = case_when(
+      row_number() == sailor_id ~ "Sailor Shift",
+      row_number() %in% sailor_songs ~ "Sailor’s Song",
+      row_number() %in% influencing_songs ~ "Influenced Song",
+      row_number() %in% influencers ~ "Influencer",
+      TRUE ~ NA_character_
+    )
+  )
+
+```
+
+```{r}
+g <- influence_subgraph %>%
+  ggraph(layout = "fr") +
+  geom_edge_fan(
+    aes(
+      colour = `Edge Type`,
+      start_cap = circle(1, 'mm'),
+      end_cap = circle(1, 'mm')
+    ),
+    arrow = arrow(length = unit(2, 'mm')),
+    alpha = 0.5
+  ) +
+  geom_point_interactive(
+    aes(
+      x = x,
+      y = y,
+      data_id = name,
+      tooltip = sprintf("%s<br/>%s", name, influence_level),
+      colour = influence_level,
+      shape = `Node Type`
+    ),
+    size = 3,
+    show.legend = TRUE
+  ) +
+  geom_node_text(
+    aes(
+      label = ifelse(name == "Sailor Shift", "Sailor Shift", NA)
+    ),
+    size = 5,
+    colour = 'red'
+  ) +
+  theme_graph(base_family = "sans") +
+  theme(legend.text = element_text(size = 6),
+        legend.title = element_text(size = 8))
+
+girafe(ggobj = g, width_svg = 10, height_svg = 9)
+
 ```
