@@ -7,7 +7,7 @@ editor: visual
 freeze: true
 warning: false
 format: html
-category: ["Hands-on Exercise"]
+categories: ["Hands-on Exercise"]
 ---
 
 # Modelling, Visualising and Analysing Network Data with R
