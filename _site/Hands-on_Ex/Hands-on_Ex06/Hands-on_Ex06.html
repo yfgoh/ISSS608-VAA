@@ -552,15 +552,27 @@ Note
 </div>
 </div>
 </div>
-<p>::: {#Things to learn from the code chunk} - a tibble data table called <em>grouped</em> is derived by aggregating the attack by <em>wkday</em> and <em>hour</em> fields.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Things to learn from the code chunk above">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>a tibble data table called <em>grouped</em> is derived by aggregating the attack by <em>wkday</em> and <em>hour</em> fields.</p>
 <ul>
 <li><p>a new field called <em>n</em> is derived by using <code>group_by()</code> and <code>count()</code> functions.</p></li>
 <li><p><code>na.omit()</code> is used to exclude missing value.</p></li>
 <li><p><code>geom_tile()</code> is used to plot tiles (grids) at each x and y position. <code>color</code> and <code>size</code> arguments are used to specify the border color and line size of the tiles.</p></li>
 <li><p><a href="https://jrnold.github.io/ggthemes/reference/theme_tufte.html"><code>theme_tufte()</code></a> of <a href="https://jrnold.github.io/ggthemes/reference/index.html"><strong>ggthemes</strong></a> package is used to remove unnecessary chart junk. To learn which visual components of default ggplot2 have been excluded, you are encouraged to comment out this line to examine the default plot.</p></li>
 <li><p><code>coord_equal()</code> is used to ensure the plot will have an aspect ratio of 1:1.</p></li>
-<li><p><code>scale_fill_gradient()</code> function is used to creates a two colour gradient (low-high). :::</p></li>
+<li><p><code>scale_fill_gradient()</code> function is used to creates a two colour gradient (low-high).</p></li>
 </ul>
+</div>
+</div>
 <p>Then we can simply group the count by hour and wkday and plot it, since we know that we have values for every combination there’s no need to further preprocess the data.</p>
 </section>
 <section id="building-multiple-calendar-heatmaps" class="level3">
@@ -733,7 +745,19 @@ Note
 </div>
 </div>
 </div>
-<p>::: callout-Things to learn from the code chunk above For effective data visualisation design,&nbsp;<code>factor()</code>&nbsp;is used convert the value type of&nbsp;<em>Year</em>&nbsp;field from numeric to factor. :::</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Things to learn from the code chunk above">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For effective data visualisation design,&nbsp;<code>factor()</code>&nbsp;is used convert the value type of&nbsp;<em>Year</em>&nbsp;field from numeric to factor.</p>
+</div>
+</div>
 
 
 </section>
