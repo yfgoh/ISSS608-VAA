@@ -6,7 +6,7 @@ website:
   back-to-top-navigation: true
   announcement: 
     dismissable: true
-    content: "🚀 [Hands-on Exercise 6](Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html) is now available!"
+    content: "🚀 [Hands-on Exercise 6](/Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html) is now available!"
     type: light
     position: below-navbar
   navbar:
