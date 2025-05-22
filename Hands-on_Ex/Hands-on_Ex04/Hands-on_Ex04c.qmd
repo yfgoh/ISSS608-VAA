@@ -9,7 +9,7 @@ freeze: true
 warning: false
 categories: 
   - ["Hands-on Exercise"]
-  - ["Statisical Analysis"]
+  - ["Statistical Analysis"]
 ---
 
 # Visualising Uncertainty
