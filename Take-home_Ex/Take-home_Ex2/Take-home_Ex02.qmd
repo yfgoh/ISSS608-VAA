@@ -539,7 +539,7 @@ p <- ggplot() +
   scale_color_manual(
     values = c("red" = "red", "grey30" = "grey30")
   ) +
-  guides(color = "none") +  # Remove node color legend
+  guides(color = "none") +  
 
   # Add Sailor Shift label in the middle of the graph
   geom_text(
@@ -584,7 +584,7 @@ kable(edge_counts, col.names = c("Role (Edge Type)", "Count"), caption = "Sailor
 sailor_edges <- mc1_edges_clean %>%
   filter(from == sailor_vertex_name | to == sailor_vertex_name)
 
-# Get the names of nodes connected to Sailor Shift (excluding Sailor Shift themself)
+# Get the names of nodes connected to Sailor Shift 
 related_names <- unique(c(sailor_edges$from, sailor_edges$to))
 related_names <- setdiff(related_names, sailor_vertex_name)
 
@@ -604,7 +604,7 @@ kable(type_counts, col.names = c("Type", "Count"), caption = "Number of Songs an
 ```
 :::
 
-Based on the above, Sailor Shift is primarily a performer and lyricist, and a member of Ivy Echos, a musical group. She was a lyricist for 17 songs and performer of 21 albums. It also shows that Oceanic Records, a Record label, has participated in the production of her works.
+Based on the above, Sailor Shift is primarily a performer and lyricist, and a member of Ivy Echos, a musical group. Her works consist of 21 albums and 17 songs. It also shows that Oceanic Records, a Record label, has participated in the production of her works.
 
 ## 5.1 Question 1a - Who has she been most influenced by over time?
 
