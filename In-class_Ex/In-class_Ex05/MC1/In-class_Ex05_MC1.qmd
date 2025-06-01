@@ -132,18 +132,20 @@ In this section, we are interested to create a sub-graph base on *MemberOf* vaue
 ```{r}
 graph_memberof <- graph %>%
   activate(edges) %>%                     # Focus on edges table
-  filter(`Edge Type` == "MemberOf")       # Filter to Memberof
+  filter(`Edge Type` == "MemberOf")       # Filter to MemberOf
 ```
 
 #### Step 2: Extract only connected nodes (i.e., used in these edges)
 
+Create a list with these edges, selecting the nodes
+
 ```{r}
 used_nodes_indices <- graph_memberof %>%
-  activate(edges) %>%
+  activate(edges) %>%       # Still edges
   as_tibble() %>%
-  select(from,to) %>%            # Only selected variables
-  unlist() %>%                  # beCause it is a graph model, not a list
-  unique()
+  select(from,to) %>%       # Selecting the nodes 
+  unlist() %>%              # beCause it is a graph model, not a list
+  unique()       # Get unique nodes
 ```
 
 This is to eliminate orphan nodes.
@@ -172,3 +174,5 @@ ggraph(graph_memberof,
                  size = 2.5) +
   theme_void()
 ```
+
+Only plot link of MemberOf with nodes
