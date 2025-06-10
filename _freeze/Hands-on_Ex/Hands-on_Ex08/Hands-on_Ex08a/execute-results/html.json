@@ -1,0 +1,15 @@
+{
+  "hash": "7b0d5da45e45737908804c719ca3ebf5",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Hands-on Exercise 8a\"\nauthor: \"Yi Fang\"\ndate: \"June 10, 2025\"\ndate-modified: \"last-modified\"\neditor: visual\nfreeze: true\nwarning: false\nformat: html\ncategories: \n  - [\"Hands-on Exercise\"]\n---\n\n\n\n# Choropleth Mapping with R\n\n## Overview\n\nChoropleth mapping involves the symbolisation of enumeration units, such as countries, provinces, states, counties or census units, using area patterns or graduated colors. For example, a social scientist may need to use a choropleth map to portray the spatial distribution of aged population of Singapore by Master Plan 2014 Subzone Boundary.\n\nIn this chapter will be covering how to plot functional and truthful choropleth maps by using an R package called [**tmap**](https://r-tmap.github.io/tmap/) package.\n\n::: callout-tip\nIt is advisable to read the functional description of each function before using them.\n:::\n\n## Getting Started\n\nIn this hands-on exercise, the key R package use is [**tmap**](https://cran.r-project.org/web/packages/tmap/) package in R. Beside **tmap** package, four other R packages will be used. They are:\n\n-   [**readr**](https://readr.tidyverse.org/) for importing delimited text file,\n\n-   [**tidyr**](https://tidyr.tidyverse.org/) for tidying data,\n\n-   [**dplyr**](https://dplyr.tidyverse.org/) for wrangling data and\n\n-   [**sf**](https://cran.r-project.org/web/packages/sf/index.html) for handling geospatial data.\n\nAmong the four packages, **readr**, **tidyr** and **dplyr** are part of **tidyverse** package.\n\nThe code chunk below will be used to install and load these packages in RStudio.\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, tmap, tidyverse)\n```\n:::\n\n\n\n::: callout-note\nNotice that, we only need to install **tidyverse** instead of **readr**, **tidyr** and **dplyr** individually.\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
