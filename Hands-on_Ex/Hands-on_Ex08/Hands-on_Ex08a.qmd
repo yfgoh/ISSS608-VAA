@@ -9,6 +9,7 @@ warning: false
 format: html
 categories: 
   - ["Hands-on Exercise"]
+  - ["Choropleth Map"]
 ---
 
 # Choropleth Mapping with R
@@ -264,7 +265,7 @@ Beside *alpha* argument, there are three other arguments for *tm_borders()*, the
 
 -   *lty* = border line type. The default is “solid”.
 
-### 4.3 **Data classification methods of tmap**
+### 4.3 Data classification methods of tmap
 
 Most choropleth maps employ some methods of data classification. The point of classification is to take a large number of observations and group them into data ranges or classes.
 
@@ -310,8 +311,37 @@ Notice that the distribution of quantile data classification method are more eve
 >         n = 5)) +
 >   tm_borders(fill_alpha = 0.5)
 > ```
+>
+> ```{r}
+> tm_shape(mpsz_pop2020)+
+>   tm_polygons("DEPENDENCY",
+>       fill.scale = tm_scale_intervals(
+>         style = "fisher",
+>         n = 5)) +
+>   tm_borders(fill_alpha = 0.5)
+> ```
 
 > DIY: Preparing choropleth maps by using similar classification method but with different numbers of classes (i.e. 2, 6, 10, 20). Compare the output maps, what observation can you draw?
+>
+> ```{r}
+> tm_shape(mpsz_pop2020)+
+>   tm_polygons("DEPENDENCY",
+>       fill.scale = tm_scale_intervals(
+>         style = "kmeans",
+>         n = 20)) +
+>   tm_borders(fill_alpha = 0.5)
+> >
+> >
+> ```
+>
+> ```{r}
+> tm_shape(mpsz_pop2020)+
+>   tm_polygons("DEPENDENCY",
+>       fill.scale = tm_scale_intervals(
+>         style = "fisher",
+>         n = 10)) +
+>   tm_borders(fill_alpha = 0.5)
+> ```
 
 #### 4.3.2 Plotting choropleth map with custom break
 
@@ -528,7 +558,7 @@ tm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N=="CENTRAL REGION", ])+
 
 ## 5 Reference
 
-### **5.1 All about tmap package**
+### 5.1 All about tmap package
 
 -   [tmap: Thematic Maps in R](https://www.jstatsoft.org/article/view/v084i06)
 
@@ -542,7 +572,7 @@ tm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N=="CENTRAL REGION", ])+
 
 -   [Exploring and presenting maps with tmap (useR!2017)](http://von-tijn.nl/tijn/research/presentations/tmap_user2017.pdf)
 
-### **5.2 Geospatial data wrangling**
+### 5.2 Geospatial data wrangling
 
 -   [sf: Simple Features for R](https://cran.r-project.org/web/packages/sf/index.html)
 
@@ -550,7 +580,7 @@ tm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N=="CENTRAL REGION", ])+
 
 -   [Reading, Writing and Converting Simple Features](https://cran.r-project.org/web/packages/sf/vignettes/sf2.html)
 
-### **5.3 Data wrangling**
+### 5.3 Data wrangling
 
 -   [dplyr](https://dplyr.tidyverse.org/)
 
