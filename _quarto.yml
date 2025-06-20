@@ -6,7 +6,7 @@ website:
   back-to-top-navigation: true
   announcement: 
     dismissable: true
-    content: "🚀 [Take-home Exercise 8a](/Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08a.html), [Take-home Exercise 8b](/Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08b.html), [Take-home Exercise 8c](/Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08c.html) are now available!"
+    content: "🚀 [Take-home Exercise 9a](/Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09a.html), [Take-home Exercise 9b](/Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09b.html), [Take-home Exercise 9c](/Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09c.html), [Take-home Exercise 9d](/Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09d.html),  [Take-home Exercise 9e](/Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09e.html) are now available!"
     type: light
     position: below-navbar
   navbar:
@@ -39,6 +39,16 @@ website:
           href: "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08b.html"
         - text: "Hands-on Exercise 8c"
           href: "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08c.html"
+        - text: "Hands-on Exercise 9a"
+          href: "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09a.html"
+        - text: "Hands-on Exercise 9b"
+          href: "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09b.html"
+        - text: "Hands-on Exercise 9c"
+          href: "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09c.html"
+        - text: "Hands-on Exercise 9d"
+          href: "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09d.html"
+        - text: "Hands-on Exercise 9e"
+          href: "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09e.html"
     - text: "In-class Exercises"
       menu:
         - text: "In-class Exercise 5"
